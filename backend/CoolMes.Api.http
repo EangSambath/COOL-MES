@@ -1,0 +1,89 @@
+@HostAddress = http://localhost:5000
+
+### 1. Get All Categories
+GET {{HostAddress}}/api/categories
+Accept: application/json
+
+### 2. Get Category by ID
+GET {{HostAddress}}/api/categories/1
+Accept: application/json
+
+### 3. Create a New Category
+POST {{HostAddress}}/api/categories
+Content-Type: application/json
+
+{
+  "categoryName": "Footwear & Boots",
+  "description": "Tactical boots, waterproof trail shoes, and rugged socks."
+}
+
+### 4. Update a Category
+PUT {{HostAddress}}/api/categories/1
+Content-Type: application/json
+
+{
+  "categoryName": "Tactical & EDC Gear",
+  "description": "Everyday carry essentials, multi-tools, tactical pens, and compact survival gear."
+}
+
+### 5. Get All Products (Paged & Filtered)
+GET {{HostAddress}}/api/products?page=1&pageSize=12&sortBy=newest
+Accept: application/json
+
+### 6. Search Products by Name
+GET {{HostAddress}}/api/products?search=Titanium
+Accept: application/json
+
+### 7. Filter Products by Category
+GET {{HostAddress}}/api/products?categoryId=1
+Accept: application/json
+
+### 8. Filter Products by Price Range & In Stock
+GET {{HostAddress}}/api/products?minPrice=20&maxPrice=50&inStockOnly=true
+Accept: application/json
+
+### 9. Get Featured Products
+GET {{HostAddress}}/api/products/featured?limit=6
+Accept: application/json
+
+### 10. Get Product by ID
+GET {{HostAddress}}/api/products/1
+Accept: application/json
+
+### 11. Create a New Product
+POST {{HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "productName": "Tactical Quick-Release Belt",
+  "description": "Heavy-duty military nylon webbing belt with solid zinc alloy cobra-style buckle.",
+  "price": 18.50,
+  "imageUrl": "https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=800&auto=format&fit=crop&q=80",
+  "stockQuantity": 30,
+  "categoryId": 1
+}
+
+### 12. Update Product
+PUT {{HostAddress}}/api/products/1
+Content-Type: application/json
+
+{
+  "productName": "Titanium EDC Pocket Multi-Tool (Gen 2)",
+  "description": "Upgraded Grade 5 titanium pocket multi-tool with 16 tools.",
+  "price": 39.99,
+  "imageUrl": "https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=800&auto=format&fit=crop&q=80",
+  "stockQuantity": 20,
+  "categoryId": 1
+}
+
+### 13. Update Product Stock Quantity (PATCH)
+PATCH {{HostAddress}}/api/products/1/stock
+Content-Type: application/json
+
+{
+  "stockQuantity": 15
+}
+
+### 14. Delete Product
+DELETE {{HostAddress}}/api/products/1
+Accept: application/json
