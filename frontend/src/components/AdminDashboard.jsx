@@ -24,18 +24,21 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
   const [productModal, setProductModal] = useState({ isOpen: false, mode: 'create', data: null });
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, type: '', id: null, name: '' });
 
-  // Load data
+  const [loadError, setLoadError] = useState(null);
+
+  // Load data (always fresh from the database via the API)
   const loadDashboardData = async () => {
     setLoading(true);
     try {
-      const [catRes, prodRes] = await Promise.all([
+      const [cats, prodPage] = await Promise.all([
         api.getCategories(),
         api.getProducts({ pageSize: 100 })
       ]);
-      setCategories(catRes.data || []);
-      setProducts(prodRes.items || []);
+      setCategories(cats || []);
+      setProducts(prodPage?.items || []);
+      setLoadError(null);
     } catch (err) {
-      console.error('Error loading dashboard data:', err);
+      setLoadError(err.message);
     } finally {
       setLoading(false);
     }
@@ -59,39 +62,33 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
 
     if (!categoryName) return;
 
-    if (categoryModal.mode === 'create') {
-      const res = await api.createCategory({ categoryName, description });
-      if (res.success) {
-        showToast(`Category "${categoryName}" created successfully!`);
-        setCategoryModal({ isOpen: false, mode: 'create', data: null });
-        await loadDashboardData();
-        onRefreshStoreData();
+    try {
+      if (categoryModal.mode === 'create') {
+        await api.createCategory({ categoryName, description });
+        showToast(`Category "${categoryName}" saved to database.`);
+      } else {
+        await api.updateCategory(categoryModal.data.categoryId, { categoryName, description });
+        showToast(`Category "${categoryName}" updated in database.`);
       }
-    } else {
-      const id = categoryModal.data.categoryId;
-      const res = await api.updateCategory(id, { categoryName, description });
-      if (res.success) {
-        showToast(`Category "${categoryName}" updated successfully!`);
-        setCategoryModal({ isOpen: false, mode: 'create', data: null });
-        await loadDashboardData();
-        onRefreshStoreData();
-      }
+      setCategoryModal({ isOpen: false, mode: 'create', data: null });
+      await loadDashboardData();
+      onRefreshStoreData();
+    } catch (err) {
+      // Keep the modal open so the admin can fix the input
+      showToast(err.message, 'error');
     }
   };
 
   const handleDeleteCategory = async () => {
-    const id = deleteConfirm.id;
+    const { id, name } = deleteConfirm;
+    setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' });
     try {
-      const res = await api.deleteCategory(id);
-      if (res.success) {
-        showToast(`Category "${deleteConfirm.name}" deleted.`);
-        setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' });
-        await loadDashboardData();
-        onRefreshStoreData();
-      }
+      await api.deleteCategory(id);
+      showToast(`Category "${name}" deleted from database.`);
+      await loadDashboardData();
+      onRefreshStoreData();
     } catch (err) {
-      showToast(err.message || 'Failed to delete category.', 'error');
-      setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' });
+      showToast(err.message, 'error');
     }
   };
 
@@ -113,45 +110,45 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
       return;
     }
 
-    if (productModal.mode === 'create') {
-      const res = await api.createProduct(productData);
-      if (res.success) {
-        showToast(`Product "${productData.productName}" added successfully!`);
-        setProductModal({ isOpen: false, mode: 'create', data: null });
-        await loadDashboardData();
-        onRefreshStoreData();
+    try {
+      if (productModal.mode === 'create') {
+        await api.createProduct(productData);
+        showToast(`Product "${productData.productName}" saved to database.`);
+      } else {
+        await api.updateProduct(productModal.data.productId, productData);
+        showToast(`Product "${productData.productName}" updated in database.`);
       }
-    } else {
-      const id = productModal.data.productId;
-      const res = await api.updateProduct(id, productData);
-      if (res.success) {
-        showToast(`Product "${productData.productName}" updated successfully!`);
-        setProductModal({ isOpen: false, mode: 'create', data: null });
-        await loadDashboardData();
-        onRefreshStoreData();
-      }
+      setProductModal({ isOpen: false, mode: 'create', data: null });
+      await loadDashboardData();
+      onRefreshStoreData();
+    } catch (err) {
+      showToast(err.message, 'error');
     }
   };
 
   const handleQuickStockUpdate = async (product, change) => {
     const newStock = Math.max(0, (product.stockQuantity || 0) + change);
-    const res = await api.updateStock(product.productId, newStock);
-    if (res.success) {
-      setProducts(prev => prev.map(p => 
+    try {
+      await api.updateStock(product.productId, newStock);
+      setProducts(prev => prev.map(p =>
         p.productId === product.productId ? { ...p, stockQuantity: newStock, inStock: newStock > 0 } : p
       ));
       onRefreshStoreData();
+    } catch (err) {
+      showToast(err.message, 'error');
     }
   };
 
   const handleDeleteProduct = async () => {
-    const id = deleteConfirm.id;
-    const res = await api.deleteProduct(id);
-    if (res.success) {
-      showToast(`Product "${deleteConfirm.name}" deleted.`);
-      setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' });
+    const { id, name } = deleteConfirm;
+    setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' });
+    try {
+      await api.deleteProduct(id);
+      showToast(`Product "${name}" deleted from database.`);
       await loadDashboardData();
       onRefreshStoreData();
+    } catch (err) {
+      showToast(err.message, 'error');
     }
   };
 
@@ -217,6 +214,25 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
       {/* Main Container */}
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 flex-1 space-y-6">
         
+        {/* Backend / database connection error */}
+        {loadError && (
+          <div className="p-4 rounded-xl border bg-rose-950/80 border-rose-800 text-rose-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold">Not connected to the database — changes cannot be saved.</p>
+                <p className="text-xs text-rose-300 mt-0.5">{loadError}</p>
+              </div>
+            </div>
+            <button
+              onClick={loadDashboardData}
+              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shrink-0"
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
         {/* Toast Notification */}
         {notification && (
           <div className={`p-4 rounded-xl border flex items-center gap-3 shadow-xl transition animate-fadeIn ${

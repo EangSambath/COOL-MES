@@ -16,11 +16,17 @@ export default function StorePage() {
   const [loading, setLoading] = useState(true);
   const [activeProduct, setActiveProduct] = useState(null);
   const [isLiveApi, setIsLiveApi] = useState(false);
+  const [loadError, setLoadError] = useState(null);
 
   const fetchCategories = useCallback(async () => {
-    const result = await api.getCategories();
-    setCategories(result.data || []);
-    if (result.isLive) setIsLiveApi(true);
+    try {
+      const cats = await api.getCategories();
+      setCategories(cats || []);
+      setIsLiveApi(true);
+    } catch (err) {
+      setLoadError(err.message);
+      setIsLiveApi(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -30,16 +36,20 @@ export default function StorePage() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await api.getProducts({
+      const page = await api.getProducts({
         search: searchTerm.trim() || undefined,
         categoryId: selectedCategory || undefined,
         inStockOnly: inStockOnly || undefined,
         sortBy: sortBy || undefined,
+        pageSize: 100, // API default is 12; load the whole catalog
       });
-      setProducts(result.items || []);
-      if (result.isLive) setIsLiveApi(true);
+      setProducts(page?.items || []);
+      setIsLiveApi(true);
+      setLoadError(null);
     } catch (err) {
-      console.error('Error fetching products:', err);
+      setProducts([]);
+      setLoadError(err.message);
+      setIsLiveApi(false);
     } finally {
       setLoading(false);
     }
@@ -85,6 +95,19 @@ export default function StorePage() {
       <HeroCarousel onExploreClick={scrollToProducts} />
 
       <main className="flex-1">
+        {loadError && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <div className="p-4 rounded-xl border bg-rose-950/80 border-rose-800 text-rose-200 flex items-center justify-between gap-3">
+              <span className="text-sm">Sorry, we couldn't load the products right now. Please try again shortly.</span>
+              <button
+                onClick={() => { fetchCategories(); fetchProducts(); }}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shrink-0"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
         <ProductGrid
           products={products}
           loading={loading}
