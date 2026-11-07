@@ -7,11 +7,12 @@ import axios from 'axios';
  * There is intentionally NO mock/in-memory fallback: if the backend is down,
  * calls throw an error so the UI can show it, instead of pretending to save.
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').trim().replace(/\/+$/, '');
+const API_BASE_URL = rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`;
 
 const client = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 60000, // 60s to allow Render free-tier cold start wakeup
   headers: { 'Content-Type': 'application/json' },
 });
 
