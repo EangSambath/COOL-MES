@@ -29,8 +29,7 @@ public class CreateProductDto
     [Range(0.01, 1000000.00, ErrorMessage = "Price must be greater than 0")]
     public decimal Price { get; set; }
 
-    [Required(ErrorMessage = "Image URL is required")]
-    [Url(ErrorMessage = "Please provide a valid image URL")]
+    [Required(ErrorMessage = "Image is required")]
     public string ImageUrl { get; set; } = string.Empty;
 
     [Range(0, 100000, ErrorMessage = "Stock quantity must be non-negative")]
@@ -52,8 +51,7 @@ public class UpdateProductDto
     [Range(0.01, 1000000.00, ErrorMessage = "Price must be greater than 0")]
     public decimal Price { get; set; }
 
-    [Required(ErrorMessage = "Image URL is required")]
-    [Url(ErrorMessage = "Please provide a valid image URL")]
+    [Required(ErrorMessage = "Image is required")]
     public string ImageUrl { get; set; } = string.Empty;
 
     [Range(0, 100000, ErrorMessage = "Stock quantity must be non-negative")]

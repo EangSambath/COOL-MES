@@ -10,6 +10,16 @@ public static class DbInitializer
         // Ensure database tables exist
         await context.Database.EnsureCreatedAsync();
 
+        // Ensure ImageUrl column supports Base64 uploaded images (unrestricted TEXT in PostgreSQL)
+        try
+        {
+            await context.Database.ExecuteSqlRawAsync(@"ALTER TABLE ""Products"" ALTER COLUMN ""ImageUrl"" TYPE text;");
+        }
+        catch
+        {
+            // Ignore if already text or using a provider where ALTER COLUMN syntax differs
+        }
+
         // Check if categories already exist
         if (await context.Categories.AnyAsync())
         {

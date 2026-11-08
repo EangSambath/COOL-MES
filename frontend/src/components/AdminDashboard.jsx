@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FolderPlus, PackagePlus, Edit2, Trash2, ArrowLeft, LogOut, 
   Search, Shield, CheckCircle2, AlertCircle, Plus, Minus, 
-  ExternalLink, Layers, Package, AlertTriangle, X
+  ExternalLink, Layers, Package, AlertTriangle, X, Upload, Image as ImageIcon, Link2
 } from 'lucide-react';
 import { api } from '../api/api';
 import logoImg from '../assets/picture/logo.png';
@@ -708,9 +708,84 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
   );
 }
 
-// Sub-component for product form with live image preview
+// Sub-component for product form with live image preview & direct file upload
 function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
   const [previewUrl, setPreviewUrl] = useState(data?.imageUrl || '');
+  const [isDragging, setIsDragging] = useState(false);
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [fileName, setFileName] = useState('');
+  const fileInputRef = useRef(null);
+
+  const isUploadedDataUrl = previewUrl.startsWith('data:image/');
+
+  // Compress and convert selected image file into a lightweight Data URL
+  const processImageFile = (file) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select a valid image file (JPG, PNG, WEBP).');
+      return;
+    }
+
+    setUploadError('');
+    setIsCompressing(true);
+    setFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX_DIM = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height && width > MAX_DIM) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else if (height > MAX_DIM) {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Try WebP first for smallest size, fallback to JPEG
+        let compressedDataUrl = canvas.toDataURL('image/webp', 0.82);
+        if (!compressedDataUrl.startsWith('data:image/webp')) {
+          compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        }
+
+        setPreviewUrl(compressedDataUrl);
+        setIsCompressing(false);
+      };
+      img.onerror = () => {
+        setUploadError('Failed to process image file.');
+        setIsCompressing(false);
+      };
+      img.src = event.target.result;
+    };
+    reader.onerror = () => {
+      setUploadError('Failed to read file.');
+      setIsCompressing(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) processImageFile(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processImageFile(file);
+  };
 
   return (
     <div 
@@ -733,6 +808,9 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
         </h3>
 
         <form onSubmit={onSubmit} className="space-y-4">
+          {/* Hidden input that carries the final image URL or Base64 Data URL for FormData */}
+          <input type="hidden" name="imageUrl" value={previewUrl} />
+
           <div>
             <label className="block text-xs font-medium text-[#6E6E73] mb-1.5">
               Product Name *
@@ -747,7 +825,7 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
             <div>
               <label className="block text-xs font-medium text-[#6E6E73] mb-1.5">
                 Category *
@@ -781,9 +859,7 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
                 className="w-full px-3.5 py-2.5 bg-[#F5F5F7] border border-black/[0.08] rounded-xl text-sm text-[#1D1D1F] placeholder-[#6E6E73] tabular-nums focus:outline-none focus:bg-white focus:border-[#1D1D1F] transition"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
               <label className="block text-xs font-medium text-[#6E6E73] mb-1.5">
                 Stock Quantity *
@@ -798,42 +874,104 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
                 className="w-full px-3.5 py-2.5 bg-[#F5F5F7] border border-black/[0.08] rounded-xl text-sm text-[#1D1D1F] placeholder-[#6E6E73] tabular-nums focus:outline-none focus:bg-white focus:border-[#1D1D1F] transition"
               />
             </div>
+          </div>
 
-            <div>
-              <label className="block text-xs font-medium text-[#6E6E73] mb-1.5">
-                Image Preview
-              </label>
-              <div className="h-[42px] rounded-xl bg-[#F5F5F7] border border-black/[0.08] flex items-center px-3 gap-2.5 overflow-hidden">
+          {/* Product Picture Upload & URL Section */}
+          <div className="space-y-2.5">
+            <label className="block text-xs font-medium text-[#6E6E73]">
+              Product Picture *
+            </label>
+
+            {/* Hidden Native File Input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
+            {/* Drag & Drop / Click to Upload Box */}
+            <div
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`cursor-pointer rounded-2xl border-2 border-dashed p-4 transition flex items-center gap-4 ${
+                isDragging
+                  ? 'border-[#1D1D1F] bg-black/[0.04]'
+                  : 'border-black/[0.12] bg-[#F5F5F7] hover:bg-black/[0.04] hover:border-black/[0.24]'
+              }`}
+            >
+              {/* Thumbnail Preview */}
+              <div className="w-16 h-16 rounded-xl bg-white border border-black/[0.08] flex items-center justify-center overflow-hidden shrink-0 shadow-apple">
                 {previewUrl ? (
-                  <>
-                    <img 
-                      src={previewUrl} 
-                      alt="Preview" 
-                      className="w-7 h-7 rounded-lg object-cover border border-black/[0.06]" 
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=100'; }}
-                    />
-                    <span className="text-[11px] font-medium text-emerald-700 truncate">Image loaded</span>
-                  </>
+                  <img
+                    src={previewUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = 'https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=100';
+                    }}
+                  />
                 ) : (
-                  <span className="text-[11px] text-[#6E6E73]">Enter image URL below</span>
+                  <ImageIcon className="w-6 h-6 text-[#6E6E73]" />
+                )}
+              </div>
+
+              {/* Instructions & Status */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1D1D1F] text-white text-xs font-medium">
+                    <Upload className="w-3.5 h-3.5" />
+                    {isCompressing ? 'Optimizing...' : 'Choose Picture'}
+                  </span>
+                  {previewUrl && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewUrl('');
+                        setFileName('');
+                        if (fileInputRef.current) fileInputRef.current.value = '';
+                      }}
+                      className="text-xs text-red-600 hover:underline font-medium"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-[#6E6E73] mt-1.5 truncate">
+                  {fileName
+                    ? `Selected: ${fileName} (Auto-compressed)`
+                    : isUploadedDataUrl
+                    ? 'Uploaded picture ready'
+                    : 'Click to browse from computer/phone, or drag & drop image here'}
+                </p>
+                {uploadError && (
+                  <p className="text-[11px] text-red-600 font-medium mt-1">{uploadError}</p>
                 )}
               </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-medium text-[#6E6E73] mb-1.5">
-              Image URL *
-            </label>
-            <input
-              type="url"
-              name="imageUrl"
-              required
-              value={previewUrl}
-              onChange={(e) => setPreviewUrl(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full px-3.5 py-2.5 bg-[#F5F5F7] border border-black/[0.08] rounded-xl text-sm text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-[#1D1D1F] transition"
-            />
+            {/* Optional: Paste External Image Link */}
+            <div className="relative">
+              <Link2 className="w-3.5 h-3.5 text-[#6E6E73] absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="url"
+                value={isUploadedDataUrl ? '' : previewUrl}
+                onChange={(e) => {
+                  setFileName('');
+                  setPreviewUrl(e.target.value);
+                }}
+                placeholder={
+                  isUploadedDataUrl
+                    ? 'Using uploaded picture from your device (or paste a web link here to replace)'
+                    : 'Or paste an image URL here (https://...)'
+                }
+                className="w-full pl-9 pr-3.5 py-2 bg-[#F5F5F7] border border-black/[0.08] rounded-xl text-xs text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-[#1D1D1F] transition"
+              />
+            </div>
           </div>
 
           <div>
@@ -859,7 +997,8 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 rounded-full bg-[#1D1D1F] hover:bg-black text-white text-xs font-medium shadow-apple transition"
+              disabled={isCompressing}
+              className="px-5 py-2.5 rounded-full bg-[#1D1D1F] hover:bg-black disabled:opacity-50 text-white text-xs font-medium shadow-apple transition"
             >
               Save Product
             </button>

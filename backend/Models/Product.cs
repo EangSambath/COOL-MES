@@ -21,7 +21,6 @@ public class Product
     public decimal Price { get; set; }
 
     [Required]
-    [MaxLength(1000)]
     public string ImageUrl { get; set; } = string.Empty;
 
     public int StockQuantity { get; set; } = 0;

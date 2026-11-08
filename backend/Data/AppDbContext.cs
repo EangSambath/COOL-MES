@@ -35,7 +35,7 @@ public class AppDbContext : DbContext
             entity.HasKey(p => p.ProductId);
             entity.Property(p => p.ProductName).IsRequired().HasMaxLength(200);
             entity.Property(p => p.Price).HasPrecision(18, 2);
-            entity.Property(p => p.ImageUrl).IsRequired().HasMaxLength(1000);
+            entity.Property(p => p.ImageUrl).IsRequired();
             entity.Property(p => p.StockQuantity).HasDefaultValue(0);
             entity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
