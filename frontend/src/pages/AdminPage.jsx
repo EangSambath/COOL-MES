@@ -15,7 +15,7 @@ export default function AdminPage() {
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-slate-950">
+      <div className="min-h-screen bg-[#F5F5F7]">
         <AdminLoginModal
           isOpen
           onClose={() => navigate('/')}
@@ -32,4 +32,3 @@ export default function AdminPage() {
     />
   );
 }
-

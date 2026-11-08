@@ -27,7 +27,7 @@ export default function ProductModal({ product, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/30 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
@@ -37,13 +37,13 @@ export default function ProductModal({ product, onClose }) {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 z-20 w-8 h-8 rounded-full bg-slate-950/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 transition"
+          className="absolute top-3.5 right-3.5 z-20 w-8 h-8 rounded-full bg-[#F5F5F7] hover:bg-black/[0.08] text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Modal Image Left/Top */}
-        <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-slate-950 relative overflow-hidden flex-shrink-0">
+        <div className="w-full md:w-1/2 aspect-square md:aspect-auto bg-[#F5F5F7] relative overflow-hidden flex-shrink-0">
           <img
             src={product.imageUrl}
             alt={product.productName}
@@ -53,75 +53,75 @@ export default function ProductModal({ product, onClose }) {
             }}
           />
           {product.categoryName && (
-            <span className="absolute bottom-3 left-3 text-[11px] font-bold px-2.5 py-1 rounded-md bg-slate-950/90 text-emerald-400 border border-slate-750">
+            <span className="absolute bottom-3 left-3 text-[11px] font-semibold px-3 py-1 rounded-full bg-white/90 text-[#1D1D1F] border border-black/[0.06] backdrop-blur-md">
               {product.categoryName}
             </span>
           )}
         </div>
 
         {/* Modal Info Right/Bottom */}
-        <div className="w-full md:w-1/2 p-5 sm:p-6 flex flex-col justify-between space-y-4">
+        <div className="w-full md:w-1/2 p-5 sm:p-6 flex flex-col justify-between space-y-4 bg-white">
           <div>
             {/* Status Badge */}
             <div className="flex items-center gap-2 mb-2">
               {isOutOfStock ? (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800">
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full bg-[#F5F5F7] text-[#6E6E73] border border-black/[0.06]">
                   <ShieldAlert className="w-3.5 h-3.5" /> Out of Stock
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full bg-[#F5F5F7] text-[#1D1D1F] border border-black/[0.06]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> {product.stockQuantity} units available
                 </span>
               )}
               {product.productId && (
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-[#6E6E73] tabular-nums">
                   ID: #{product.productId}
                 </span>
               )}
             </div>
 
             {/* Title */}
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-white leading-[1.1]">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[#1D1D1F] leading-[1.12]">
               {product.productName}
             </h2>
 
             {/* Price */}
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-white tabular-nums">
+              <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#1D1D1F] tabular-nums">
                 ${Number(product.price).toFixed(2)}
               </span>
-              <span className="text-xs text-slate-400">USD</span>
+              <span className="text-xs text-[#6E6E73]">USD</span>
             </div>
 
             {/* Description */}
-            <div className="mt-4 pt-3 border-t border-slate-800">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <div className="mt-4 pt-3 border-t border-black/[0.06]">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-[#6E6E73] mb-1">
                 Product Details
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-h-36 overflow-y-auto pr-1">
+              <p className="text-xs sm:text-sm text-[#6E6E73] leading-relaxed max-h-36 overflow-y-auto pr-1">
                 {product.description || 'Premium gear built to tactical standards.'}
               </p>
             </div>
 
             {/* Quantity Selector */}
             {!isOutOfStock && (
-              <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300">Quantity:</span>
-                <div className="flex items-center gap-3 bg-slate-950 border border-slate-750 px-2 py-1 rounded-xl">
+              <div className="mt-4 pt-3 border-t border-black/[0.06] flex items-center justify-between">
+                <span className="text-xs font-medium text-[#1D1D1F]">Quantity</span>
+                <div className="flex items-center gap-3 bg-[#F5F5F7] border border-black/[0.06] px-2 py-1 rounded-full">
                   <button
                     onClick={decrement}
                     disabled={quantity <= 1}
-                    className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-white flex items-center justify-center transition"
+                    className="w-7 h-7 rounded-full bg-white hover:bg-black/[0.06] disabled:opacity-30 text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
-                  <span className="font-mono font-bold text-white text-sm w-6 text-center">
+                  <span className="tabular-nums font-semibold text-[#1D1D1F] text-sm w-6 text-center">
                     {quantity}
                   </span>
                   <button
                     onClick={increment}
                     disabled={quantity >= maxAvailable}
-                    className="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 disabled:hover:bg-slate-800 text-white flex items-center justify-center transition"
+                    className="w-7 h-7 rounded-full bg-white hover:bg-black/[0.06] disabled:opacity-30 text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
                   >
                     <Plus className="w-3.5 h-3.5" />
                   </button>
@@ -136,16 +136,16 @@ export default function ProductModal({ product, onClose }) {
                 placeholder="Add special note/request (optional)..."
                 value={customNote}
                 onChange={(e) => setCustomNote(e.target.value)}
-                className="w-full text-xs bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                className="w-full text-xs bg-[#F5F5F7] border border-black/[0.06] rounded-xl px-3.5 py-2.5 text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-black/25 transition"
               />
             </div>
           </div>
 
           {/* Bottom Total & Order Button */}
-          <div className="pt-3 border-t border-slate-800 space-y-2.5">
-            <div className="flex items-center justify-between text-xs text-slate-300">
-              <span>Order Subtotal:</span>
-              <span className="font-mono font-bold text-emerald-400 text-base">
+          <div className="pt-3 border-t border-black/[0.06] space-y-2.5">
+            <div className="flex items-center justify-between text-xs text-[#6E6E73]">
+              <span>Order Subtotal</span>
+              <span className="tabular-nums font-semibold text-[#1D1D1F] text-base">
                 ${subtotal}
               </span>
             </div>
@@ -153,18 +153,18 @@ export default function ProductModal({ product, onClose }) {
             <button
               onClick={handleOrder}
               disabled={isOutOfStock}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-lg ${
+              className={`w-full py-3 px-4 rounded-full font-medium text-sm flex items-center justify-center gap-2 transition shadow-apple ${
                 isOutOfStock
-                  ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
-                  : 'bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-sky-500/25'
+                  ? 'bg-[#F5F5F7] text-[#6E6E73] cursor-not-allowed border border-black/[0.06]'
+                  : 'bg-[#1D1D1F] hover:bg-[#000000] text-white'
               }`}
             >
               <Send className="w-4 h-4" />
-              <span>CHAT TO ORDER ON TELEGRAM</span>
+              <span>Order on Telegram</span>
             </button>
 
-            <div className="text-[11px] text-center text-slate-400">
-              Clicking will open Telegram chat with <strong className="text-sky-400">@{TELEGRAM_USERNAME}</strong> with your order ready.
+            <div className="text-[11px] text-center text-[#6E6E73]">
+              Opens Telegram chat with <strong className="text-[#1D1D1F]">@{TELEGRAM_USERNAME}</strong> with your order ready.
             </div>
           </div>
         </div>
@@ -172,4 +172,3 @@ export default function ProductModal({ product, onClose }) {
     </div>
   );
 }
-

@@ -1,21 +1,17 @@
 /* ==========================================================================
-   Motion — enter animations for overlays and sheets
-   Critically damped (no overshoot): these surfaces just arrived, there was
-   no momentum-carrying gesture, so bounce would feel wrong.
+   Motion — Critically Damped Spring Enter Animations & Reduced Motion
    ========================================================================== */
 
-/* Scrim: simple fade (blur radius comes from backdrop-blur on the element) */
 @keyframes scrimIn {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
-/* Sheet: "materializes" — blur, scale and opacity resolve together */
 @keyframes sheetIn {
   from {
     opacity: 0;
-    transform: scale(0.96) translateY(12px);
-    filter: blur(8px);
+    transform: scale(0.96) translateY(10px);
+    filter: blur(6px);
   }
   to {
     opacity: 1;
@@ -24,34 +20,31 @@
   }
 }
 
-/* Reduced-motion equivalent: gentle cross-fade, no movement */
 @keyframes fadeOnly {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
 
 .animate-fadeIn {
-  animation: scrimIn 260ms var(--ease-spring) both;
+  animation: scrimIn 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-sheetIn {
-  animation: sheetIn 420ms var(--ease-spring) both;
+  animation: sheetIn 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
   will-change: transform, opacity, filter;
 }
 
 /* ==========================================================================
    Accessibility: prefers-reduced-motion
-   Not "no feedback" — a gentler, non-vestibular equivalent.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 
   .animate-sheetIn,
   .animate-fadeIn {
-    animation: fadeOnly 200ms ease both;
+    animation: fadeOnly 180ms ease both;
   }
 
-  /* Drop slides, springs, scale and parallax; keep colour/opacity changes */
   *,
   *::before,
   *::after {
@@ -60,12 +53,14 @@
   }
 
   button:not(:disabled):active,
-  [role='button']:active {
-    scale: 1;
+  [role='button']:active,
+  .apple-card:hover,
+  .apple-card:active {
+    transform: none !important;
+    scale: 1 !important;
   }
 
-  .group:hover .group-hover\:scale-105,
-  .hover\:-translate-y-1:hover {
+  .group:hover .group-hover\:scale-105 {
     transform: none !important;
   }
 

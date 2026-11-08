@@ -16,38 +16,29 @@ export default function Header({
   return (
     <header className="sticky top-0 z-40 glass-chrome">
       {/* Top micro bar for quick contact info */}
-      <div className="bg-black/25 px-4 py-1.5 text-xs border-b border-white/5 text-slate-400">
+      <div className="bg-[#F5F5F7] px-4 py-1.5 text-xs border-b border-black/[0.06] text-[#6E6E73]">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="flex items-center gap-1.5 text-[#1D1D1F] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#1D1D1F]"></span>
               គុណភាព ទំនុកចិត្ត សេវាកម្ម
             </span>
-            <span className="hidden sm:inline-block text-slate-600">|</span>
+            <span className="hidden sm:inline-block text-black/15">|</span>
             <a 
               href={`tel:${STORE_PHONE.replace(/\s+/g, '')}`} 
-              className="hidden sm:flex items-center gap-1 hover:text-slate-200 transition"
+              className="hidden sm:flex items-center gap-1 hover:text-[#000000] transition"
             >
-              <Phone className="w-3 h-3 text-emerald-400" />
+              <Phone className="w-3 h-3 text-[#1D1D1F]" />
               <span>Call: {STORE_PHONE}</span>
             </a>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* <span className="text-slate-500 hidden md:inline">
-              Backend Status:
-            </span> */}
-            {/* <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium ${
-              isLiveApi ? 'bg-emerald-950 text-emerald-300 border border-emerald-800' : 'bg-amber-950 text-amber-300 border border-amber-800'
-            }`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${isLiveApi ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-              {isLiveApi ? 'Live API (.NET 8)' : 'Demo Mode'}
-            </span> */}
             <button
               onClick={openGeneralTelegram}
-              className="hover:text-sky-400 flex items-center gap-1 transition text-slate-300"
+              className="hover:text-[#000000] flex items-center gap-1 transition text-[#1D1D1F] font-medium"
             >
-              <Send className="w-3 h-3 text-sky-400" />
+              <Send className="w-3 h-3 text-[#1D1D1F]" />
               <span>@{TELEGRAM_USERNAME}</span>
             </button>
           </div>
@@ -63,7 +54,7 @@ export default function Header({
             onClick={() => onSelectCategory(null)}
             className="flex items-center gap-3 cursor-pointer group select-none shrink-0"
           >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-slate-900 border border-slate-750 p-1 shadow-lg shadow-emerald-500/10 group-hover:border-emerald-500/50 group-hover:shadow-emerald-500/30 transition flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#F5F5F7] border border-black/[0.08] p-1 transition flex items-center justify-center overflow-hidden">
               <img 
                 src={logoImg} 
                 alt="COOL MES Logo" 
@@ -72,14 +63,14 @@ export default function Header({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
-                  COOL<span className="text-emerald-400"> MES</span>
+                <span className="text-xl sm:text-2xl font-semibold tracking-tight text-[#1D1D1F]">
+                  COOL<span> MES</span>
                 </span>
-                <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-[#F5F5F7] text-[#1D1D1F] border border-black/[0.08]">
                   GEARS
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
+              <p className="text-[11px] text-[#6E6E73] font-normal tracking-normal">
                 Tactical & EDC Accessories
               </p>
             </div>
@@ -93,13 +84,13 @@ export default function Header({
                 placeholder="Search titanium tools, bags, watches, phone cases..."
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-10 pr-10 py-2.5 bg-slate-950/80 border border-slate-750 rounded-xl text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition shadow-inner"
+                className="w-full pl-10 pr-14 py-2.5 bg-[#F5F5F7] border border-black/[0.06] rounded-full text-sm text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-black/25 focus:ring-4 focus:ring-black/[0.04] transition"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#6E6E73] absolute left-3.5 top-1/2 -translate-y-1/2" />
               {searchTerm && (
                 <button
                   onClick={() => onSearchChange('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs bg-slate-800 text-slate-400 hover:text-white px-1.5 py-0.5 rounded"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs bg-black/[0.06] text-[#1D1D1F] hover:bg-black/[0.12] px-2 py-0.5 rounded-full transition"
                 >
                   Clear
                 </button>
@@ -112,16 +103,16 @@ export default function Header({
             {/* CHAT TO ORDER Primary CTA Button */}
             <button
               onClick={openGeneralTelegram}
-              className="flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition group"
+              className="flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white font-medium text-xs sm:text-sm shadow-apple transition group"
             >
-              <Send className="w-4 h-4 fill-white/20 group-hover:rotate-12 transition duration-300" />
-              <span className="tracking-wide">CHAT TO ORDER</span>
+              <Send className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition duration-300" />
+              <span className="tracking-tight">Chat to Order</span>
             </button>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+              className="md:hidden p-2 text-[#1D1D1F] hover:bg-[#F5F5F7] rounded-full transition"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -136,27 +127,27 @@ export default function Header({
               placeholder="Search gear and accessories..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+              className="w-full pl-10 pr-4 py-2 bg-[#F5F5F7] border border-black/[0.06] rounded-full text-sm text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-black/25"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#6E6E73] absolute left-3.5 top-1/2 -translate-y-1/2" />
           </div>
         </div>
       </div>
 
       {/* Category Navigation Bar */}
-      <div className="border-t border-white/10 overflow-x-auto scrollbar-none">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
-          <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider hidden lg:flex items-center gap-1 pr-2">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Categories:
+      <div className="border-t border-black/[0.06] overflow-x-auto scrollbar-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
+          <span className="text-[#6E6E73] text-xs font-medium tracking-tight hidden lg:flex items-center gap-1 pr-2">
+            Categories
           </span>
 
           {/* All Products pill */}
           <button
             onClick={() => onSelectCategory(null)}
-            className={`px-3.5 py-1.5 rounded-full font-medium transition ${
+            className={`px-4 py-1.5 rounded-full font-medium transition ${
               selectedCategory === null
-                ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
-                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                ? 'bg-[#1D1D1F] text-white'
+                : 'text-[#6E6E73] hover:bg-[#F5F5F7] hover:text-[#1D1D1F]'
             }`}
           >
             All Products
@@ -169,16 +160,16 @@ export default function Header({
               <button
                 key={cat.categoryId}
                 onClick={() => onSelectCategory(cat.categoryId)}
-                className={`px-3.5 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 ${
+                className={`px-4 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 ${
                   isSelected
-                    ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-[#1D1D1F] text-white'
+                    : 'text-[#6E6E73] hover:bg-[#F5F5F7] hover:text-[#1D1D1F]'
                 }`}
               >
                 <span>{cat.categoryName}</span>
                 {cat.productCount > 0 && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                    isSelected ? 'bg-slate-950/30 text-slate-950' : 'bg-slate-800 text-slate-400'
+                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full tabular-nums ${
+                    isSelected ? 'bg-white/20 text-white' : 'bg-black/[0.06] text-[#6E6E73]'
                   }`}>
                     {cat.productCount}
                   </span>
@@ -191,18 +182,18 @@ export default function Header({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-3">
-          <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
-            <p className="text-xs text-slate-400 mb-1">Direct Contact:</p>
-            <p className="text-sm font-semibold text-white">Phone: {STORE_PHONE}</p>
-            <p className="text-sm font-semibold text-sky-400">Telegram: @{TELEGRAM_USERNAME}</p>
+        <div className="md:hidden border-t border-black/[0.06] bg-white px-4 py-4 space-y-3 animate-fadeIn">
+          <div className="p-3.5 bg-[#F5F5F7] rounded-2xl border border-black/[0.06]">
+            <p className="text-xs text-[#6E6E73] mb-1">Direct Contact</p>
+            <p className="text-sm font-semibold text-[#1D1D1F]">Phone: {STORE_PHONE}</p>
+            <p className="text-sm font-medium text-[#1D1D1F]">Telegram: @{TELEGRAM_USERNAME}</p>
           </div>
           <button
             onClick={() => {
               setMobileMenuOpen(false);
               openGeneralTelegram();
             }}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-sky-500 text-white font-semibold text-sm"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full bg-[#1D1D1F] text-white font-medium text-sm"
           >
             <Send className="w-4 h-4" />
             <span>Chat on Telegram</span>
@@ -212,4 +203,3 @@ export default function Header({
     </header>
   );
 }
-

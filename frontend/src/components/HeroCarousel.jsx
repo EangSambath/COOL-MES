@@ -32,61 +32,50 @@ export default function HeroCarousel({ onExploreClick }) {
 
   return (
     <div 
-      className="relative w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] max-w-7xl mx-auto mt-4 sm:mt-6 rounded-3xl overflow-hidden bg-slate-950 select-none group shadow-apple-lg ring-1 ring-white/10"
+      className="relative w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] max-w-7xl mx-auto mt-6 sm:mt-8 rounded-3xl overflow-hidden bg-[#F5F5F7] select-none group border border-black/[0.06] shadow-apple"
       onMouseEnter={() => setIsPlaying(false)}
       onMouseLeave={() => setIsPlaying(true)}
     >
       {/* Slides Container */}
       <div 
-        className="flex transition-transform duration-700 ease-apple h-[360px] sm:h-[420px] md:h-[480px] lg:h-[520px]"
+        className="flex transition-transform duration-700 ease-apple h-[400px] sm:h-[440px] md:h-[480px] lg:h-[520px]"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {HERO_SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
-            className="w-full flex-shrink-0 relative overflow-hidden h-full"
+            className="w-full flex-shrink-0 relative overflow-hidden h-full grid grid-cols-1 md:grid-cols-12 items-center bg-[#F5F5F7]"
           >
-            {/* Background image with high quality dark overlay */}
-            <img
-              src={slide.imageUrl}
-              alt={slide.title}
-              className="absolute inset-0 w-full h-full object-cover object-center filter brightness-60 scale-105 group-hover:scale-100 transition duration-1000"
-            />
-            
-            {/* Gradients to blend smoothly into website theme */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-transparent" />
-
-            {/* Slide Content */}
-            <div className="relative z-10 max-w-7xl mx-auto h-full flex flex-col justify-center px-6 sm:px-12 lg:px-16">
-              <div className="max-w-2xl space-y-3 sm:space-y-4">
+            {/* Left Content Column — Clean Apple Store Editorial Typography */}
+            <div className="relative z-10 md:col-span-6 lg:col-span-6 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-8">
+              <div className="max-w-xl space-y-3 sm:space-y-4">
                 
                 {/* Badge / Tag */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-[0.08em] uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-black/[0.06] text-[#1D1D1F]">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     {slide.tag}
                   </span>
-                  <span className="text-xs text-slate-300 font-medium px-2.5 py-0.5 rounded bg-slate-800/80 backdrop-blur">
+                  <span className="text-xs text-[#6E6E73] font-medium">
                     {slide.badge}
                   </span>
                 </div>
 
                 {/* Main Headline */}
-                <h1 className="text-[2rem] sm:text-5xl md:text-6xl font-semibold text-white tracking-[-0.03em] leading-[1.05]">
+                <h1 className="text-2xl sm:text-4xl lg:text-5xl font-semibold text-[#1D1D1F] tracking-[-0.03em] leading-[1.06]">
                   {slide.title}
                 </h1>
 
                 {/* Subtitle */}
-                <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-xl font-normal leading-relaxed">
+                <p className="text-sm sm:text-base text-[#6E6E73] max-w-lg font-normal leading-relaxed">
                   {slide.subtitle}
                 </p>
 
                 {/* Actions */}
-                <div className="pt-2 flex items-center gap-3 sm:gap-4 flex-wrap">
+                <div className="pt-2 flex items-center gap-3 flex-wrap">
                   <button
                     onClick={onExploreClick}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition"
+                    className="flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white font-medium text-sm transition shadow-apple"
                   >
                     <span>{slide.ctaText}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -94,13 +83,23 @@ export default function HeroCarousel({ onExploreClick }) {
 
                   <button
                     onClick={openGeneralTelegram}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900/90 hover:bg-sky-500 hover:text-white border border-slate-750 hover:border-sky-400 text-slate-200 font-semibold text-sm transition group/btn backdrop-blur-sm"
+                    className="flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white hover:bg-black/[0.04] border border-black/[0.12] text-[#1D1D1F] font-medium text-sm transition group/btn"
                   >
-                    <Send className="w-4 h-4 text-sky-400 group-hover/btn:text-white group-hover/btn:translate-x-0.5 transition" />
-                    <span>Telegram @eangsambath</span>
+                    <Send className="w-4 h-4 text-[#1D1D1F] group-hover/btn:translate-x-0.5 transition" />
+                    <span>@{`eangsambath`}</span>
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Right Image Column */}
+            <div className="hidden md:block md:col-span-6 lg:col-span-6 h-full relative overflow-hidden">
+              <img
+                src={slide.imageUrl}
+                alt={slide.title}
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-1000 ease-apple"
+              />
+              <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
             </div>
           </div>
         ))}
@@ -110,47 +109,48 @@ export default function HeroCarousel({ onExploreClick }) {
       <button
         onClick={prevSlide}
         aria-label="Previous slide"
-        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/70 hover:bg-emerald-500 text-white hover:text-slate-950 border border-slate-700 hover:border-emerald-400 flex items-center justify-center backdrop-blur-md transition shadow-lg opacity-80 hover:opacity-100 z-20"
+        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-[#1D1D1F] border border-black/[0.08] flex items-center justify-center backdrop-blur-md transition shadow-apple opacity-0 group-hover:opacity-100 z-20"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
 
       <button
         onClick={nextSlide}
         aria-label="Next slide"
-        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-slate-900/70 hover:bg-emerald-500 text-white hover:text-slate-950 border border-slate-700 hover:border-emerald-400 flex items-center justify-center backdrop-blur-md transition shadow-lg opacity-80 hover:opacity-100 z-20"
+        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-[#1D1D1F] border border-black/[0.08] flex items-center justify-center backdrop-blur-md transition shadow-apple opacity-0 group-hover:opacity-100 z-20"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-5 h-5" />
       </button>
 
       {/* Bottom Controls Bar: Dots & Play/Pause */}
-      <div className="absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-4">
-        {/* Play/Pause Button */}
-        <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          aria-label={isPlaying ? "Pause autoplay" : "Start autoplay"}
-          className="text-slate-400 hover:text-white transition p-1 rounded-md bg-slate-950/60 backdrop-blur-sm"
-        >
-          {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-        </button>
+      <div className="absolute bottom-4 left-0 right-0 z-20 flex items-center justify-center gap-3">
+        <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-black/[0.06] shadow-sm">
+          {/* Play/Pause Button */}
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            aria-label={isPlaying ? "Pause autoplay" : "Start autoplay"}
+            className="text-[#6E6E73] hover:text-[#1D1D1F] transition p-0.5"
+          >
+            {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+          </button>
 
-        {/* Dots Indicators */}
-        <div className="flex items-center gap-2">
-          {HERO_SLIDES.map((slide, idx) => (
-            <button
-              key={slide.id}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-              className={`transition-all duration-300 rounded-full ${
-                currentIndex === idx
-                  ? 'w-8 h-2 bg-emerald-400'
-                  : 'w-2 h-2 bg-slate-600 hover:bg-slate-400'
-              }`}
-            />
-          ))}
+          {/* Dots Indicators */}
+          <div className="flex items-center gap-1.5">
+            {HERO_SLIDES.map((slide, idx) => (
+              <button
+                key={slide.id}
+                onClick={() => goToSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`transition-all duration-300 rounded-full ${
+                  currentIndex === idx
+                    ? 'w-6 h-1.5 bg-[#1D1D1F]'
+                    : 'w-1.5 h-1.5 bg-black/20 hover:bg-black/40'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
-

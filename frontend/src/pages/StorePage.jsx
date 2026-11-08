@@ -82,7 +82,7 @@ export default function StorePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen flex flex-col bg-white text-[#1D1D1F]">
       <Header
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -97,11 +97,11 @@ export default function StorePage() {
       <main className="flex-1">
         {loadError && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-            <div className="p-4 rounded-xl border bg-rose-950/80 border-rose-800 text-rose-200 flex items-center justify-between gap-3">
-              <span className="text-sm">Sorry, we couldn't load the products right now. Please try again shortly.</span>
+            <div className="p-4 rounded-2xl border border-black/[0.08] bg-[#F5F5F7] text-[#1D1D1F] flex items-center justify-between gap-3">
+              <span className="text-sm text-[#6E6E73]">Sorry, we couldn't load the products right now. Please try again shortly.</span>
               <button
                 onClick={() => { fetchCategories(); fetchProducts(); }}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shrink-0"
+                className="px-4 py-2 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white text-xs font-medium shrink-0"
               >
                 Retry
               </button>

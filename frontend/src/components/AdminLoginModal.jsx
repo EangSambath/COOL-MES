@@ -22,34 +22,34 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-md glass-sheet animate-sheetIn rounded-2xl p-6 sm:p-8"
+        className="relative w-full max-w-md glass-sheet animate-sheetIn rounded-3xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5F5F7] hover:bg-black/[0.08] text-[#1D1D1F] flex items-center justify-center transition"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto mb-3">
-            <Lock className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#F5F5F7] border border-black/[0.06] text-[#1D1D1F] flex items-center justify-center mx-auto mb-3">
+            <Lock className="w-5 h-5" />
           </div>
-          <h2 className="text-xl font-black text-white font-mono">
-            ADMINISTRATOR ACCESS
+          <h2 className="text-xl font-semibold tracking-tight text-[#1D1D1F]">
+            Administrator Access
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#6E6E73] mt-1">
             Enter admin password to manage categories and products.
           </p>
         </div>
 
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-950/50 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -57,7 +57,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            <label className="block text-xs font-medium text-[#1D1D1F] mb-1.5">
               Admin Password
             </label>
             <div className="relative">
@@ -70,21 +70,20 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
                   setPassword(e.target.value);
                   setError('');
                 }}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-950 border border-slate-750 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                className="w-full pl-10 pr-4 py-2.5 bg-[#F5F5F7] border border-black/[0.06] rounded-xl text-sm text-[#1D1D1F] placeholder-[#6E6E73] focus:outline-none focus:bg-white focus:border-black/25 transition"
               />
-              <KeyRound className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+              <KeyRound className="w-4 h-4 text-[#6E6E73] absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/20 transition"
+            className="w-full py-2.5 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white font-medium text-sm transition shadow-apple"
           >
-            Authenticate & Access Dashboard
+            Continue to Dashboard
           </button>
         </form>
       </div>
     </div>
   );
 }
-
