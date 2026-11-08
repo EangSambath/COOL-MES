@@ -27,11 +27,11 @@ export default function ProductModal({ product, onClose }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-slate-900 border border-slate-750 rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-2xl glass-sheet animate-sheetIn rounded-3xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -81,13 +81,13 @@ export default function ProductModal({ product, onClose }) {
             </div>
 
             {/* Title */}
-            <h2 className="text-xl sm:text-2xl font-black text-white leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-white leading-[1.1]">
               {product.productName}
             </h2>
 
             {/* Price */}
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
+              <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-white tabular-nums">
                 ${Number(product.price).toFixed(2)}
               </span>
               <span className="text-xs text-slate-400">USD</span>
@@ -153,7 +153,7 @@ export default function ProductModal({ product, onClose }) {
             <button
               onClick={handleOrder}
               disabled={isOutOfStock}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-lg active:scale-95 ${
+              className={`w-full py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition shadow-lg ${
                 isOutOfStock
                   ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                   : 'bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white shadow-sky-500/25'

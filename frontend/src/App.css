@@ -1,15 +1,75 @@
-/* App-specific custom animations if needed */
-@keyframes fadeIn {
+/* ==========================================================================
+   Motion — enter animations for overlays and sheets
+   Critically damped (no overshoot): these surfaces just arrived, there was
+   no momentum-carrying gesture, so bounce would feel wrong.
+   ========================================================================== */
+
+/* Scrim: simple fade (blur radius comes from backdrop-blur on the element) */
+@keyframes scrimIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Sheet: "materializes" — blur, scale and opacity resolve together */
+@keyframes sheetIn {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.96) translateY(12px);
+    filter: blur(8px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    filter: blur(0);
   }
 }
 
+/* Reduced-motion equivalent: gentle cross-fade, no movement */
+@keyframes fadeOnly {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .animate-fadeIn {
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: scrimIn 260ms var(--ease-spring) both;
+}
+
+.animate-sheetIn {
+  animation: sheetIn 420ms var(--ease-spring) both;
+  will-change: transform, opacity, filter;
+}
+
+/* ==========================================================================
+   Accessibility: prefers-reduced-motion
+   Not "no feedback" — a gentler, non-vestibular equivalent.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .animate-sheetIn,
+  .animate-fadeIn {
+    animation: fadeOnly 200ms ease both;
+  }
+
+  /* Drop slides, springs, scale and parallax; keep colour/opacity changes */
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  button:not(:disabled):active,
+  [role='button']:active {
+    scale: 1;
+  }
+
+  .group:hover .group-hover\:scale-105,
+  .hover\:-translate-y-1:hover {
+    transform: none !important;
+  }
+
+  .animate-pulse {
+    animation: none;
+  }
 }

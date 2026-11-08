@@ -14,9 +14,9 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 shadow-xl">
+    <header className="sticky top-0 z-40 glass-chrome">
       {/* Top micro bar for quick contact info */}
-      <div className="bg-slate-950 px-4 py-1.5 text-xs border-b border-slate-850 text-slate-400">
+      <div className="bg-black/25 px-4 py-1.5 text-xs border-b border-white/5 text-slate-400">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
@@ -72,7 +72,7 @@ export default function Header({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl sm:text-2xl font-black tracking-wider text-white font-mono">
+                <span className="text-xl sm:text-2xl font-semibold tracking-tight text-white">
                   COOL<span className="text-emerald-400"> MES</span>
                 </span>
                 <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -112,7 +112,7 @@ export default function Header({
             {/* CHAT TO ORDER Primary CTA Button */}
             <button
               onClick={openGeneralTelegram}
-              className="flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition active:scale-95 group"
+              className="flex items-center gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:shadow-sky-500/40 transition group"
             >
               <Send className="w-4 h-4 fill-white/20 group-hover:rotate-12 transition duration-300" />
               <span className="tracking-wide">CHAT TO ORDER</span>
@@ -144,7 +144,7 @@ export default function Header({
       </div>
 
       {/* Category Navigation Bar */}
-      <div className="border-t border-slate-800/80 bg-slate-900/60 overflow-x-auto scrollbar-none">
+      <div className="border-t border-white/10 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center gap-2 text-xs sm:text-sm whitespace-nowrap">
           <span className="text-slate-400 text-xs font-semibold uppercase tracking-wider hidden lg:flex items-center gap-1 pr-2">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> Categories:
@@ -153,7 +153,7 @@ export default function Header({
           {/* All Products pill */}
           <button
             onClick={() => onSelectCategory(null)}
-            className={`px-3 py-1.5 rounded-lg font-medium transition ${
+            className={`px-3.5 py-1.5 rounded-full font-medium transition ${
               selectedCategory === null
                 ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
                 : 'text-slate-300 hover:bg-slate-800 hover:text-white'
@@ -169,7 +169,7 @@ export default function Header({
               <button
                 key={cat.categoryId}
                 onClick={() => onSelectCategory(cat.categoryId)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full font-medium transition flex items-center gap-1.5 ${
                   isSelected
                     ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/20'
                     : 'text-slate-300 hover:bg-slate-800 hover:text-white'

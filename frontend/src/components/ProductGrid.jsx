@@ -16,17 +16,17 @@ export default function ProductGrid({
   hasActiveFilters
 }) {
   return (
-    <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <section id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       {/* Section Header & Filter Controls Bar */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest font-mono">
+            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-[0.12em]">
               GEAR CATALOG
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-white mt-1">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.025em] text-white mt-1">
             {activeCategoryName ? `${activeCategoryName}` : 'All Gears & Accessories'}
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
@@ -87,7 +87,7 @@ export default function ProductGrid({
 
       {/* Loading Skeleton State */}
       {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 pt-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 pt-4">
           {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-slate-900/60 rounded-2xl border border-slate-800 p-3 sm:p-4 animate-pulse space-y-3">
               <div className="aspect-square bg-slate-800 rounded-xl"></div>
@@ -116,7 +116,7 @@ export default function ProductGrid({
         </div>
       ) : (
         /* Product Cards Grid: 4 cards desktop / 3 tablet / 2 mobile */
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 pt-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 pt-2">
           {products.map((product) => (
             <ProductCard
               key={product.productId}

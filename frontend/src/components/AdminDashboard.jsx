@@ -172,7 +172,7 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       {/* Top Admin Bar */}
-      <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 shadow-md">
+      <header className="sticky top-0 z-40 glass-chrome">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-slate-950 border border-slate-750 p-1 flex items-center justify-center overflow-hidden">
@@ -585,11 +585,11 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
       {/* ========================================================= */}
       {categoryModal.isOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
           onClick={() => setCategoryModal({ isOpen: false, mode: 'create', data: null })}
         >
           <div 
-            className="relative w-full max-w-md bg-slate-900 border border-slate-750 rounded-2xl shadow-2xl p-6"
+            className="relative w-full max-w-md glass-sheet animate-sheetIn rounded-2xl p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -669,11 +669,11 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
       {/* ========================================================= */}
       {deleteConfirm.isOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
           onClick={() => setDeleteConfirm({ isOpen: false, type: '', id: null, name: '' })}
         >
           <div 
-            className="w-full max-w-sm bg-slate-900 border border-slate-750 rounded-2xl shadow-2xl p-6 text-center"
+            className="w-full max-w-sm glass-sheet animate-sheetIn rounded-2xl p-6 text-center"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-12 h-12 rounded-2xl bg-rose-950/80 border border-rose-800 text-rose-400 flex items-center justify-center mx-auto mb-3">
@@ -710,11 +710,11 @@ function ProductFormModal({ mode, data, categories, onClose, onSubmit }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-xl bg-slate-900 border border-slate-750 rounded-2xl shadow-2xl p-6 max-h-[92vh] overflow-y-auto"
+        className="relative w-full max-w-xl glass-sheet animate-sheetIn rounded-2xl p-6 max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white">

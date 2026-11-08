@@ -32,13 +32,13 @@ export default function HeroCarousel({ onExploreClick }) {
 
   return (
     <div 
-      className="relative w-full overflow-hidden bg-slate-950 select-none group"
+      className="relative w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] max-w-7xl mx-auto mt-4 sm:mt-6 rounded-3xl overflow-hidden bg-slate-950 select-none group shadow-apple-lg ring-1 ring-white/10"
       onMouseEnter={() => setIsPlaying(false)}
       onMouseLeave={() => setIsPlaying(true)}
     >
       {/* Slides Container */}
       <div 
-        className="flex transition-transform duration-700 ease-out h-[360px] sm:h-[420px] md:h-[480px] lg:h-[520px]"
+        className="flex transition-transform duration-700 ease-apple h-[360px] sm:h-[420px] md:h-[480px] lg:h-[520px]"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {HERO_SLIDES.map((slide, idx) => (
@@ -63,7 +63,7 @@ export default function HeroCarousel({ onExploreClick }) {
                 
                 {/* Badge / Tag */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-[0.08em] uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     {slide.tag}
                   </span>
@@ -73,7 +73,7 @@ export default function HeroCarousel({ onExploreClick }) {
                 </div>
 
                 {/* Main Headline */}
-                <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight uppercase font-mono">
+                <h1 className="text-[2rem] sm:text-5xl md:text-6xl font-semibold text-white tracking-[-0.03em] leading-[1.05]">
                   {slide.title}
                 </h1>
 
@@ -86,7 +86,7 @@ export default function HeroCarousel({ onExploreClick }) {
                 <div className="pt-2 flex items-center gap-3 sm:gap-4 flex-wrap">
                   <button
                     onClick={onExploreClick}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition active:scale-95"
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition"
                   >
                     <span>{slide.ctaText}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default function HeroCarousel({ onExploreClick }) {
 
                   <button
                     onClick={openGeneralTelegram}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900/90 hover:bg-sky-500 hover:text-white border border-slate-750 hover:border-sky-400 text-slate-200 font-semibold text-sm transition active:scale-95 group/btn backdrop-blur-sm"
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900/90 hover:bg-sky-500 hover:text-white border border-slate-750 hover:border-sky-400 text-slate-200 font-semibold text-sm transition group/btn backdrop-blur-sm"
                   >
                     <Send className="w-4 h-4 text-sky-400 group-hover/btn:text-white group-hover/btn:translate-x-0.5 transition" />
                     <span>Telegram @eangsambath</span>

@@ -14,7 +14,7 @@ export default function ProductCard({ product, onViewDetails }) {
   return (
     <div 
       onClick={() => onViewDetails(product)}
-      className="group relative bg-slate-900/90 rounded-2xl border border-slate-800 hover:border-emerald-500/50 shadow-md hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 flex flex-col overflow-hidden cursor-pointer"
+      className="group relative bg-slate-900 rounded-3xl border border-white/10 hover:border-white/20 shadow-apple hover:shadow-apple-lg hover:-translate-y-1 active:scale-[0.98] active:translate-y-0 active:duration-100 transition-[transform,box-shadow,border-color] duration-500 flex flex-col overflow-hidden cursor-pointer"
     >
       {/* Product Image Area */}
       <div className="relative aspect-square w-full overflow-hidden bg-slate-950">
@@ -22,7 +22,7 @@ export default function ProductCard({ product, onViewDetails }) {
           src={product.imageUrl}
           alt={product.productName}
           loading="lazy"
-          className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-500"
+          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
           onError={(e) => {
             // Fallback image if broken
             e.target.src = 'https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=600&auto=format&fit=crop&q=80';
@@ -66,7 +66,7 @@ export default function ProductCard({ product, onViewDetails }) {
       <div className="p-3.5 sm:p-4 flex-1 flex flex-col justify-between space-y-3">
         <div>
           {/* Product Name */}
-          <h3 className="font-bold text-slate-100 text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-emerald-400 transition-colors">
+          <h3 className="font-semibold tracking-tight text-slate-100 text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-emerald-400 transition-colors">
             {product.productName}
           </h3>
 
@@ -80,7 +80,7 @@ export default function ProductCard({ product, onViewDetails }) {
         <div className="pt-2 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div>
             <span className="text-[11px] text-slate-400 uppercase tracking-wider block font-medium">Price</span>
-            <div className="text-base sm:text-lg font-black text-white font-mono tracking-tight text-emerald-400">
+            <div className="text-base sm:text-lg font-semibold text-slate-100 tracking-tight tabular-nums">
               ${Number(product.price).toFixed(2)}
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function ProductCard({ product, onViewDetails }) {
           <button
             onClick={handleOrderClick}
             disabled={isOutOfStock}
-            className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-md active:scale-95 ${
+            className={`w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition shadow-md ${
               isOutOfStock
                 ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
                 : 'bg-sky-500 hover:bg-sky-400 text-white shadow-sky-500/20 hover:shadow-sky-500/30'

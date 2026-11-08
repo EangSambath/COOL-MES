@@ -7,7 +7,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-850 text-slate-400 mt-16">
+    <footer className="bg-slate-950 border-t border-white/10 text-slate-400 mt-16">
       {/* Upper features highlights */}
       <div className="border-b border-slate-850/80 bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -63,7 +63,7 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-full bg-slate-900 border border-slate-750 p-1 flex items-center justify-center overflow-hidden">
                 <img src={logoImg} alt="COOL MES Logo" className="w-full h-full rounded-full object-contain" />
               </div>
-              <span className="text-xl font-black text-white font-mono tracking-wider">
+              <span className="text-xl font-semibold text-white tracking-tight">
                 COOL<span className="text-emerald-400"> MES</span>
               </span>
             </div>
