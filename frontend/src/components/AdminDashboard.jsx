@@ -175,8 +175,8 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
       <header className="sticky top-0 z-40 glass-chrome">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white border border-black/[0.06] shadow-apple p-1.5 flex items-center justify-center overflow-hidden">
-              <img src={logoImg} alt="COOL MES Logo" className="w-full h-full object-contain" />
+            <div className="w-10 h-10 rounded-full bg-white border border-black/[0.06] shadow-apple p-1.5 flex items-center justify-center overflow-hidden">
+              <img src={logoImg} alt="COOL MES Logo" className="w-full h-full rounded-full object-contain" />
             </div>
             <div>
               <div className="flex items-center gap-2">

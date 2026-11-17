@@ -14,8 +14,9 @@ export default function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 glass-chrome">
-      {/* Top micro bar for quick contact info */}
+
+    <>
+    {/* Top micro bar for quick contact info */}
       <div className="bg-[#F5F5F7] px-4 py-1.5 text-xs border-b border-black/[0.06] text-[#6E6E73]">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
@@ -45,6 +46,9 @@ export default function Header({
         </div>
       </div>
 
+    <header className="sticky top-0 z-40 glass-chrome">
+      
+
       {/* Main header navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
         <div className="flex items-center justify-between gap-4">
@@ -65,9 +69,6 @@ export default function Header({
               <div className="flex items-center gap-2">
                 <span className="text-xl sm:text-2xl font-semibold tracking-tight text-[#1D1D1F]">
                   COOL<span> MES</span>
-                </span>
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-[#F5F5F7] text-[#1D1D1F] border border-black/[0.08]">
-                  GEARS
                 </span>
               </div>
               <p className="text-[11px] text-[#6E6E73] font-normal tracking-normal">
@@ -201,5 +202,6 @@ export default function Header({
         </div>
       )}
     </header>
+    </>
   );
 }

@@ -201,7 +201,7 @@ export const HERO_SLIDES = [
     subtitle: "Engineered for durability, precision, and peak performance in every situation.",
     tag: "NEW ARRIVALS 2026",
     badge: "Grade 5 Titanium & Aerospace Aluminum",
-    imageUrl: "https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://addictedtoaudio.com.au/cdn/shop/files/dunu-titan-s-dynamic-in-ear-earphones-silver-3_4000x@3x.progressive.jpg?v=1760074883",
     ctaText: "Explore EDC Gear"
   },
   {
@@ -210,7 +210,7 @@ export const HERO_SLIDES = [
     subtitle: "Cordura 1000D water-resistant modular packs built for rigorous adventures.",
     tag: "BEST SELLER",
     badge: "MOLLE System Compatible",
-    imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://www.aulastar.com/uploads/allimg/20240903/1-240Z31025504X.jpg",
     ctaText: "Shop Backpacks"
   },
   {
@@ -219,7 +219,7 @@ export const HERO_SLIDES = [
     subtitle: "50-meter water resistance, shockproof composite frames, ballistic NATO bands.",
     tag: "FEATURED GEAR",
     badge: "Built for Extreme Elements",
-    imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://gearstudiokh.com/web/image/product.product/1012/image_1024/Aula%20SC580%20Wireless%20Gaming%20Mouse%20%28Black%29?unique=e355b12",
     ctaText: "View Watches"
   },
   {
@@ -228,7 +228,7 @@ export const HERO_SLIDES = [
     subtitle: "Armored MagSafe cases, solar power banks, and heavy-duty magnetic mounts.",
     tag: "TOUGH PROTECTION",
     badge: "Drop-Tested Military Spec",
-    imageUrl: "https://images.unsplash.com/photo-1609592426034-75053c82ef94?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://addictedtoaudio.com.au/cdn/shop/files/dunu-titan-s-dynamic-in-ear-earphones-silver-3_4000x@3x.progressive.jpg?v=1760074883",
     ctaText: "Explore Tech Gear"
   },
   {
@@ -237,7 +237,7 @@ export const HERO_SLIDES = [
     subtitle: "Ferro rods, titanium flasks, and emergency gear ready whenever you head into the wild.",
     tag: "WILDERNESS READY",
     badge: "Ultra-Light & Weatherproof",
-    imageUrl: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://www.aulastar.com/uploads/allimg/20240903/1-240Z31025504X.jpg",
     ctaText: "Shop Survival Gear"
   },
   {
@@ -246,7 +246,7 @@ export const HERO_SLIDES = [
     subtitle: "Chat 1-on-1 with @eangsambath for instant answers, fast delivery, and personal service.",
     tag: "FAST & DIRECT",
     badge: "No Complex Signups Needed",
-    imageUrl: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=1600&auto=format&fit=crop&q=85",
+    imageUrl: "https://gearstudiokh.com/web/image/product.product/1012/image_1024/Aula%20SC580%20Wireless%20Gaming%20Mouse%20%28Black%29?unique=e355b12",
     ctaText: "Chat with Us"
   }
 ];
