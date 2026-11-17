@@ -31,13 +31,13 @@ export default function HeroCarousel({ onExploreClick }) {
   }, [currentIndex, isPlaying]);
 
   return (
-    <div 
+    <div
       className="relative w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] max-w-7xl mx-auto mt-6 sm:mt-8 rounded-3xl overflow-hidden bg-[#F5F5F7] select-none group border border-black/[0.06] shadow-apple"
       onMouseEnter={() => setIsPlaying(false)}
       onMouseLeave={() => setIsPlaying(true)}
     >
       {/* Slides Container */}
-      <div 
+      <div
         className="flex transition-transform duration-700 ease-apple h-[400px] sm:h-[440px] md:h-[480px] lg:h-[520px]"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
@@ -49,7 +49,7 @@ export default function HeroCarousel({ onExploreClick }) {
             {/* Left Content Column — Clean Apple Store Editorial Typography */}
             <div className="relative z-10 md:col-span-6 lg:col-span-6 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-8">
               <div className="max-w-xl space-y-3 sm:space-y-4">
-                
+
                 {/* Badge / Tag */}
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-black/[0.06] text-[#1D1D1F]">
@@ -93,15 +93,17 @@ export default function HeroCarousel({ onExploreClick }) {
             </div>
 
             {/* Right Image Column */}
-            <div className="hidden md:block md:col-span-6 lg:col-span-6 h-full relative overflow-hidden">
+            <div className="block h-48 sm:h-56 md:h-full md:col-span-6 lg:col-span-6 relative overflow-hidden order-first md:order-last">
               <img
                 src={slide.imageUrl}
                 alt={slide.title}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-1000 ease-apple"
               />
-              <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
+                <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
+                <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
+                <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
+                </div>
             </div>
-          </div>
         ))}
       </div>
 
@@ -141,11 +143,10 @@ export default function HeroCarousel({ onExploreClick }) {
                 key={slide.id}
                 onClick={() => goToSlide(idx)}
                 aria-label={`Go to slide ${idx + 1}`}
-                className={`transition-all duration-300 rounded-full ${
-                  currentIndex === idx
-                    ? 'w-6 h-1.5 bg-[#1D1D1F]'
-                    : 'w-1.5 h-1.5 bg-black/20 hover:bg-black/40'
-                }`}
+                className={`transition-all duration-300 rounded-full ${currentIndex === idx
+                  ? 'w-6 h-1.5 bg-[#1D1D1F]'
+                  : 'w-1.5 h-1.5 bg-black/20 hover:bg-black/40'
+                  }`}
               />
             ))}
           </div>

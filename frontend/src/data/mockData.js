@@ -13,7 +13,7 @@ export const MOCK_PRODUCTS = [
     productName: "Titanium EDC Pocket Multi-Tool",
     description: "Precision machined Grade 5 titanium multi-tool featuring 14 integrated tools including bottle opener, pry bar, hex wrenches, and screwdriver bits.",
     price: 38.00,
-    imageUrl: "https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/first_hero.webp",
     stockQuantity: 25,
     inStock: true,
     categoryId: 1,
@@ -24,7 +24,7 @@ export const MOCK_PRODUCTS = [
     productName: "Tactical Aerospace Aluminum Pen",
     description: "Hard anodized aircraft-grade aluminum tactical pen with tungsten carbide glass breaker tip and smooth Parker-compatible ink cartridge.",
     price: 22.50,
-    imageUrl: "https://images.unsplash.com/photo-1585336261026-70e60fa225eb?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/second_hero.webp",
     stockQuantity: 40,
     inStock: true,
     categoryId: 1,
@@ -35,7 +35,7 @@ export const MOCK_PRODUCTS = [
     productName: "Compact LED Rechargeable EDC Flashlight",
     description: "Ultra-bright 1200 lumen pocket flashlight with magnetic base, Type-C quick charging, IPX8 waterproof rating, and 5 lighting modes.",
     price: 32.00,
-    imageUrl: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/third_hero.webp",
     stockQuantity: 18,
     inStock: true,
     categoryId: 1,
@@ -46,7 +46,7 @@ export const MOCK_PRODUCTS = [
     productName: "Carbon Fiber Minimalist RFID Wallet",
     description: "Real 3K carbon fiber slim cardholder with integrated RFID blocking shield and matte black tactical money clip.",
     price: 28.00,
-    imageUrl: "https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/fourth_hero.webp",
     stockQuantity: 35,
     inStock: true,
     categoryId: 1,
@@ -59,7 +59,7 @@ export const MOCK_PRODUCTS = [
     productName: "MOLLE Tactical Assault Backpack 35L",
     description: "Water-resistant 1000D Cordura nylon modular backpack featuring laser-cut MOLLE webbing, padded laptop sleeve, and ergonomic airflow back panel.",
     price: 58.00,
-    imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/fifth_hero.webp",
     stockQuantity: 15,
     inStock: true,
     categoryId: 2,
@@ -70,7 +70,7 @@ export const MOCK_PRODUCTS = [
     productName: "EDC Waterproof Crossbody Sling Pack",
     description: "Weatherproof sling bag with quick-release magnetic buckle, hidden security pocket, and organized compartments for iPad, wallet, and gear.",
     price: 39.00,
-    imageUrl: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=800&auto=format&fit=crop&q=80",
+    imageUrl: "/picture/sixth_hero.webp",
     stockQuantity: 22,
     inStock: true,
     categoryId: 2,
@@ -201,7 +201,7 @@ export const HERO_SLIDES = [
     subtitle: "Engineered for durability, precision, and peak performance in every situation.",
     tag: "NEW ARRIVALS 2026",
     badge: "Grade 5 Titanium & Aerospace Aluminum",
-    imageUrl: "https://addictedtoaudio.com.au/cdn/shop/files/dunu-titan-s-dynamic-in-ear-earphones-silver-3_4000x@3x.progressive.jpg?v=1760074883",
+    imageUrl: "/picture/first_hero.webp",
     ctaText: "Explore EDC Gear"
   },
   {
@@ -210,7 +210,7 @@ export const HERO_SLIDES = [
     subtitle: "Cordura 1000D water-resistant modular packs built for rigorous adventures.",
     tag: "BEST SELLER",
     badge: "MOLLE System Compatible",
-    imageUrl: "https://www.aulastar.com/uploads/allimg/20240903/1-240Z31025504X.jpg",
+    imageUrl: "/picture/second_hero.webp",
     ctaText: "Shop Backpacks"
   },
   {
@@ -219,7 +219,7 @@ export const HERO_SLIDES = [
     subtitle: "50-meter water resistance, shockproof composite frames, ballistic NATO bands.",
     tag: "FEATURED GEAR",
     badge: "Built for Extreme Elements",
-    imageUrl: "https://gearstudiokh.com/web/image/product.product/1012/image_1024/Aula%20SC580%20Wireless%20Gaming%20Mouse%20%28Black%29?unique=e355b12",
+    imageUrl: "/picture/third_hero.webp",
     ctaText: "View Watches"
   },
   {
@@ -228,7 +228,7 @@ export const HERO_SLIDES = [
     subtitle: "Armored MagSafe cases, solar power banks, and heavy-duty magnetic mounts.",
     tag: "TOUGH PROTECTION",
     badge: "Drop-Tested Military Spec",
-    imageUrl: "https://addictedtoaudio.com.au/cdn/shop/files/dunu-titan-s-dynamic-in-ear-earphones-silver-3_4000x@3x.progressive.jpg?v=1760074883",
+    imageUrl: "/picture/fourth_hero.webp",
     ctaText: "Explore Tech Gear"
   },
   {
@@ -237,7 +237,7 @@ export const HERO_SLIDES = [
     subtitle: "Ferro rods, titanium flasks, and emergency gear ready whenever you head into the wild.",
     tag: "WILDERNESS READY",
     badge: "Ultra-Light & Weatherproof",
-    imageUrl: "https://www.aulastar.com/uploads/allimg/20240903/1-240Z31025504X.jpg",
+    imageUrl: "/picture/fifth_hero.webp",
     ctaText: "Shop Survival Gear"
   },
   {
@@ -246,7 +246,7 @@ export const HERO_SLIDES = [
     subtitle: "Chat 1-on-1 with @eangsambath for instant answers, fast delivery, and personal service.",
     tag: "FAST & DIRECT",
     badge: "No Complex Signups Needed",
-    imageUrl: "https://gearstudiokh.com/web/image/product.product/1012/image_1024/Aula%20SC580%20Wireless%20Gaming%20Mouse%20%28Black%29?unique=e355b12",
+    imageUrl: "/picture/sixth_hero.webp",
     ctaText: "Chat with Us"
   }
 ];
