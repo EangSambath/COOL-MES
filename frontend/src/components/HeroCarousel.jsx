@@ -38,16 +38,16 @@ export default function HeroCarousel({ onExploreClick }) {
     >
       {/* Slides Container */}
       <div
-        className="flex transition-transform duration-700 ease-apple h-[400px] sm:h-[440px] md:h-[480px] lg:h-[520px]"
+        className="flex transition-transform duration-700 ease-apple h-[auto] md:h-[480px] lg:h-[520px]"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {HERO_SLIDES.map((slide, idx) => (
           <div
             key={slide.id}
-            className="w-full flex-shrink-0 relative overflow-hidden h-full grid grid-cols-1 md:grid-cols-12 items-center bg-[#F5F5F7]"
+            className="w-full flex-shrink-0 relative overflow-hidden h-full flex flex-col md:grid md:grid-cols-12 items-center bg-[#F5F5F7]"
           >
             {/* Left Content Column — Clean Apple Store Editorial Typography */}
-            <div className="relative z-10 md:col-span-6 lg:col-span-6 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 py-8">
+            <div className="relative z-10 w-full md:col-span-6 lg:col-span-6 h-full flex flex-col justify-center px-6 sm:px-12 lg:px-16 pt-4 pb-16 md:py-8">
               <div className="max-w-xl space-y-3 sm:space-y-4">
 
                 {/* Badge / Tag */}
@@ -93,14 +93,14 @@ export default function HeroCarousel({ onExploreClick }) {
             </div>
 
             {/* Right Image Column */}
-            <div className="block h-48 sm:h-56 md:h-full md:col-span-6 lg:col-span-6 relative overflow-hidden order-first md:order-last">
+            <div className="block w-full h-48 sm:h-56 md:h-full md:col-span-6 lg:col-span-6 relative overflow-hidden order-first md:order-last">
               <img
                 src={slide.imageUrl}
                 alt={slide.title}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-1000 ease-apple"
               />
                 <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
-                <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
+                <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
                 <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
                 </div>
             </div>

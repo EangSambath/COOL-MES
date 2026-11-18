@@ -228,7 +228,7 @@ export const HERO_SLIDES = [
     subtitle: "Armored MagSafe cases, solar power banks, and heavy-duty magnetic mounts.",
     tag: "TOUGH PROTECTION",
     badge: "Drop-Tested Military Spec",
-    imageUrl: "/picture/fourth_hero.webp",
+    imageUrl: "/picture/first_hero.webp",
     ctaText: "Explore Tech Gear"
   },
   {
@@ -237,7 +237,7 @@ export const HERO_SLIDES = [
     subtitle: "Ferro rods, titanium flasks, and emergency gear ready whenever you head into the wild.",
     tag: "WILDERNESS READY",
     badge: "Ultra-Light & Weatherproof",
-    imageUrl: "/picture/fifth_hero.webp",
+    imageUrl: "/picture/second_hero.webp",
     ctaText: "Shop Survival Gear"
   },
   {
@@ -246,7 +246,7 @@ export const HERO_SLIDES = [
     subtitle: "Chat 1-on-1 with @eangsambath for instant answers, fast delivery, and personal service.",
     tag: "FAST & DIRECT",
     badge: "No Complex Signups Needed",
-    imageUrl: "/picture/sixth_hero.webp",
+    imageUrl: "/picture/third_hero.webp",
     ctaText: "Chat with Us"
   }
 ];
