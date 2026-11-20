@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Send, ShieldCheck, ArrowRight, Pause, Play } from 'lucide-react';
 import { HERO_SLIDES } from '../data/mockData';
 import { openGeneralTelegram } from '../utils/telegram';
@@ -38,7 +38,7 @@ export default function HeroCarousel({ onExploreClick }) {
     >
       {/* Slides Container */}
       <div
-        className="flex transition-transform duration-700 ease-apple h-[auto] md:h-[480px] lg:h-[520px]"
+        className="flex transition-transform duration-700 ease-apple h-auto md:h-[480px] lg:h-[520px]"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {HERO_SLIDES.map((slide, idx) => (
@@ -81,13 +81,13 @@ export default function HeroCarousel({ onExploreClick }) {
                     <ArrowRight className="w-4 h-4" />
                   </button>
 
-                  <button
+                  {/* <button
                     onClick={openGeneralTelegram}
                     className="flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white hover:bg-black/[0.04] border border-black/[0.12] text-[#1D1D1F] font-medium text-sm transition group/btn"
                   >
                     <Send className="w-4 h-4 text-[#1D1D1F] group-hover/btn:translate-x-0.5 transition" />
                     <span>@{`eangsambath`}</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -95,14 +95,15 @@ export default function HeroCarousel({ onExploreClick }) {
             {/* Right Image Column */}
             <div className="block w-full h-48 sm:h-56 md:h-full md:col-span-6 lg:col-span-6 relative overflow-hidden order-first md:order-last">
               <img
+                loading={idx === 0 ? "eager" : "lazy"}
+                fetchPriority={idx === 0 ? "high" : "low"}
                 src={slide.imageUrl}
                 alt={slide.title}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition duration-1000 ease-apple"
               />
-                <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
-                <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
-                <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
-                </div>
+              <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
+              <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
+              </div>
             </div>
         ))}
       </div>

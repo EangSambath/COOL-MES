@@ -201,7 +201,7 @@ export const HERO_SLIDES = [
     subtitle: "Engineered for durability, precision, and peak performance in every situation.",
     tag: "NEW ARRIVALS 2026",
     badge: "Grade 5 Titanium & Aerospace Aluminum",
-    imageUrl: "/picture/first_hero.webp",
+    imageUrl: "/picture/first_hero.jpg",
     ctaText: "Explore EDC Gear"
   },
   {
@@ -210,7 +210,7 @@ export const HERO_SLIDES = [
     subtitle: "Cordura 1000D water-resistant modular packs built for rigorous adventures.",
     tag: "BEST SELLER",
     badge: "MOLLE System Compatible",
-    imageUrl: "/picture/second_hero.webp",
+    imageUrl: "/picture/second_hero.jpg",
     ctaText: "Shop Backpacks"
   },
   {
@@ -219,7 +219,7 @@ export const HERO_SLIDES = [
     subtitle: "50-meter water resistance, shockproof composite frames, ballistic NATO bands.",
     tag: "FEATURED GEAR",
     badge: "Built for Extreme Elements",
-    imageUrl: "/picture/third_hero.webp",
+    imageUrl: "/picture/third_hero.jpg",
     ctaText: "View Watches"
   },
   {
@@ -228,7 +228,7 @@ export const HERO_SLIDES = [
     subtitle: "Armored MagSafe cases, solar power banks, and heavy-duty magnetic mounts.",
     tag: "TOUGH PROTECTION",
     badge: "Drop-Tested Military Spec",
-    imageUrl: "/picture/first_hero.webp",
+    imageUrl: "/picture/fourth_hero.jpg",
     ctaText: "Explore Tech Gear"
   },
   {
@@ -237,7 +237,7 @@ export const HERO_SLIDES = [
     subtitle: "Ferro rods, titanium flasks, and emergency gear ready whenever you head into the wild.",
     tag: "WILDERNESS READY",
     badge: "Ultra-Light & Weatherproof",
-    imageUrl: "/picture/second_hero.webp",
+    imageUrl: "/picture/fifth_hero.jpg",
     ctaText: "Shop Survival Gear"
   },
   {
@@ -246,7 +246,7 @@ export const HERO_SLIDES = [
     subtitle: "Chat 1-on-1 with @eangsambath for instant answers, fast delivery, and personal service.",
     tag: "FAST & DIRECT",
     badge: "No Complex Signups Needed",
-    imageUrl: "/picture/third_hero.webp",
+    imageUrl: "/picture/sixth_hero.jpg",
     ctaText: "Chat with Us"
   }
 ];
