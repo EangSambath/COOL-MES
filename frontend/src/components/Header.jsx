@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Send, Shield, Phone, Menu, X, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Phone, Send, Search, X, Menu } from 'lucide-react';
 import { TELEGRAM_USERNAME, STORE_PHONE, openGeneralTelegram } from '../utils/telegram';
 import logoImg from '../assets/picture/logo.png';
 
@@ -9,7 +9,6 @@ export default function Header({
   categories = [], 
   selectedCategory, 
   onSelectCategory,
-  isLiveApi
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
