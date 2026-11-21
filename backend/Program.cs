@@ -1,4 +1,9 @@
+using System.Threading.RateLimiting;
+using CoolMes.Api.Auth;
+using CoolMes.Api.Controllers;
 using CoolMes.Api.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -12,6 +17,9 @@ if (!string.IsNullOrWhiteSpace(port))
     builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 }
 
+// Swagger is a developer tool: on in Development, off in production unless EnableSwagger=true
+var enableSwagger = builder.Environment.IsDevelopment() || builder.Configuration.GetValue<bool>("EnableSwagger");
+
 // 1. Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -21,7 +29,22 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "COOL MES - E-Commerce Web API (.NET 8 LTS)",
         Version = "v1",
-        Description = "Backend API for COOL MES Gears & Accessories Store (Telegram: @eangsambath)"
+        Description = "Backend API for COOL MES Gears & Accessories Store (Telegram: @eangsambath). " +
+                      "To call admin endpoints: POST /api/auth/login, then click Authorize and paste the token."
+    });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        Description = "Admin token from POST /api/auth/login"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } },
+            Array.Empty<string>()
+        }
     });
 });
 
@@ -36,7 +59,46 @@ var connectionString = NormalizePostgresConnectionString(rawConnectionString);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// 3. Configure CORS (Allow React Frontend Vite / Dev & Vercel Deployed servers)
+// 3. Admin authentication: POST /api/auth/login returns a signed token.
+//    Every create / update / delete endpoint requires "Authorization: Bearer {token}".
+builder.Services.AddSingleton<AdminTokenService>();
+builder.Services
+    .AddAuthentication(AdminTokenAuthenticationHandler.SchemeName)
+    .AddScheme<AuthenticationSchemeOptions, AdminTokenAuthenticationHandler>(AdminTokenAuthenticationHandler.SchemeName, _ => { });
+builder.Services.AddAuthorization();
+
+// 4. Brute-force protection: max 5 login attempts per minute per IP address
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            message = "Too many login attempts. Please wait one minute and try again."
+        }, cancellationToken);
+    };
+    options.AddPolicy(RateLimitPolicies.Login, httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
+
+// 5. Hosting platforms like Render put a proxy in front of the API.
+//    This makes RemoteIpAddress the real visitor IP (needed for the login rate limit).
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+// 6. CORS: local dev servers + the deployed frontend(s) listed in FRONTEND_URL (comma-separated)
 var allowedOrigins = new List<string>
 {
     "http://localhost:5173",
@@ -59,17 +121,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy.SetIsOriginAllowed(origin =>
-            {
-                if (string.IsNullOrWhiteSpace(origin)) return false;
-                var normalized = origin.TrimEnd('/');
-                if (allowedOrigins.Contains(normalized, StringComparer.OrdinalIgnoreCase))
-                    return true;
-                // Also allow Vercel preview & production subdomains if FRONTEND_URL is not yet set
-                if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri) &&
-                    uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
-                    return true;
-                return false;
-            })
+                !string.IsNullOrWhiteSpace(origin) &&
+                allowedOrigins.Contains(origin.TrimEnd('/'), StringComparer.OrdinalIgnoreCase))
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -77,7 +130,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 4. Auto-seed Database on startup
+// 7. Auto-seed Database on startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -95,19 +148,35 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 5. Configure the HTTP request pipeline (Swagger enabled in both Dev & Render so root URL works)
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+// 8. Configure the HTTP request pipeline
+app.UseForwardedHeaders();
+
+if (enableSwagger)
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "COOL MES API v1");
-    c.RoutePrefix = string.Empty; // Loads Swagger directly at root
-});
-app.MapGet("/swagger", () => Results.Redirect("/"));
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "COOL MES API v1");
+        c.RoutePrefix = string.Empty; // Serves Swagger UI directly at / and /index.html
+    });
+    app.MapGet("/swagger", () => Results.Redirect("/"));
+}
+else
+{
+    app.MapGet("/", () => Results.Ok(new
+    {
+        name = "COOL MES API",
+        status = "running"
+    }));
+}
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 app.UseCors("AllowFrontend");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseRateLimiter();
 
 app.MapControllers();
 

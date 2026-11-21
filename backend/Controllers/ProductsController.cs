@@ -1,6 +1,8 @@
+using System.Linq.Expressions;
 using CoolMes.Api.Data;
 using CoolMes.Api.Dtos;
 using CoolMes.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,28 @@ namespace CoolMes.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
+    private const int DefaultPageSize = 12;
+    private const int MaxPageSize = 100;
+    private const int MaxPage = 100_000; // keeps (page - 1) * pageSize far away from int overflow
+
+    // One place that turns a Product row into the JSON shape the frontend uses.
+    // EF Core translates this into SQL, so only the needed columns are read.
+    private static readonly Expression<Func<Product, ProductDto>> ToDtoExpression = p => new ProductDto
+    {
+        ProductId = p.ProductId,
+        ProductName = p.ProductName,
+        Description = p.Description,
+        Price = p.Price,
+        ImageUrl = p.ImageUrl,
+        StockQuantity = p.StockQuantity,
+        CategoryId = p.CategoryId,
+        CategoryName = p.Category != null ? p.Category.CategoryName : string.Empty,
+        CreatedAt = p.CreatedAt,
+        UpdatedAt = p.UpdatedAt
+    };
+
+    private static readonly Func<Product, ProductDto> ToDto = ToDtoExpression.Compile();
+
     private readonly AppDbContext _context;
     private readonly ILogger<ProductsController> _logger;
 
@@ -25,10 +49,7 @@ public class ProductsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PagedResult<ProductDto>>> GetProducts([FromQuery] ProductQueryParams query)
     {
-        var productQuery = _context.Products
-            .Include(p => p.Category)
-            .AsNoTracking()
-            .AsQueryable();
+        IQueryable<Product> productQuery = _context.Products.AsNoTracking();
 
         // 1. Search by name or description
         if (!string.IsNullOrWhiteSpace(query.Search))
@@ -57,43 +78,31 @@ public class ProductsController : ControllerBase
         }
 
         // 4. Filter by stock status
-        if (query.InStockOnly.HasValue && query.InStockOnly.Value)
+        if (query.InStockOnly == true)
         {
             productQuery = productQuery.Where(p => p.StockQuantity > 0);
         }
 
-        // 5. Sorting
+        // 5. Sorting (ProductId as a tie-breaker keeps page order stable)
         productQuery = query.SortBy?.ToLower() switch
         {
-            "price_asc" => productQuery.OrderBy(p => p.Price),
-            "price_desc" => productQuery.OrderByDescending(p => p.Price),
-            "name_asc" => productQuery.OrderBy(p => p.ProductName),
-            "name_desc" => productQuery.OrderByDescending(p => p.ProductName),
-            "oldest" => productQuery.OrderBy(p => p.CreatedAt),
-            _ => productQuery.OrderByDescending(p => p.CreatedAt) // default newest
+            "price_asc" => productQuery.OrderBy(p => p.Price).ThenBy(p => p.ProductId),
+            "price_desc" => productQuery.OrderByDescending(p => p.Price).ThenBy(p => p.ProductId),
+            "name_asc" => productQuery.OrderBy(p => p.ProductName).ThenBy(p => p.ProductId),
+            "name_desc" => productQuery.OrderByDescending(p => p.ProductName).ThenBy(p => p.ProductId),
+            "oldest" => productQuery.OrderBy(p => p.CreatedAt).ThenBy(p => p.ProductId),
+            _ => productQuery.OrderByDescending(p => p.CreatedAt).ThenByDescending(p => p.ProductId) // default newest
         };
 
         var totalCount = await productQuery.CountAsync();
 
-        var page = query.Page > 0 ? query.Page : 1;
-        var pageSize = query.PageSize > 0 ? Math.Min(query.PageSize, 100) : 12;
+        var page = Math.Clamp(query.Page, 1, MaxPage);
+        var pageSize = query.PageSize > 0 ? Math.Min(query.PageSize, MaxPageSize) : DefaultPageSize;
 
         var items = await productQuery
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(p => new ProductDto
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                Description = p.Description,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                StockQuantity = p.StockQuantity,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category != null ? p.Category.CategoryName : string.Empty,
-                CreatedAt = p.CreatedAt,
-                UpdatedAt = p.UpdatedAt
-            })
+            .Select(ToDtoExpression)
             .ToListAsync();
 
         return Ok(new PagedResult<ProductDto>
@@ -112,22 +121,9 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProducts()
     {
         var products = await _context.Products
-            .Include(p => p.Category)
             .AsNoTracking()
             .OrderByDescending(p => p.CreatedAt)
-            .Select(p => new ProductDto
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                Description = p.Description,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                StockQuantity = p.StockQuantity,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category != null ? p.Category.CategoryName : string.Empty,
-                CreatedAt = p.CreatedAt,
-                UpdatedAt = p.UpdatedAt
-            })
+            .Select(ToDtoExpression)
             .ToListAsync();
 
         return Ok(products);
@@ -142,24 +138,11 @@ public class ProductsController : ControllerBase
         var effectiveLimit = Math.Clamp(limit, 1, 24);
 
         var products = await _context.Products
-            .Include(p => p.Category)
             .AsNoTracking()
             .Where(p => p.StockQuantity > 0)
             .OrderByDescending(p => p.CreatedAt)
             .Take(effectiveLimit)
-            .Select(p => new ProductDto
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                Description = p.Description,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                StockQuantity = p.StockQuantity,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category != null ? p.Category.CategoryName : string.Empty,
-                CreatedAt = p.CreatedAt,
-                UpdatedAt = p.UpdatedAt
-            })
+            .Select(ToDtoExpression)
             .ToListAsync();
 
         return Ok(products);
@@ -172,22 +155,9 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
         var product = await _context.Products
-            .Include(p => p.Category)
             .AsNoTracking()
             .Where(p => p.ProductId == id)
-            .Select(p => new ProductDto
-            {
-                ProductId = p.ProductId,
-                ProductName = p.ProductName,
-                Description = p.Description,
-                Price = p.Price,
-                ImageUrl = p.ImageUrl,
-                StockQuantity = p.StockQuantity,
-                CategoryId = p.CategoryId,
-                CategoryName = p.Category != null ? p.Category.CategoryName : string.Empty,
-                CreatedAt = p.CreatedAt,
-                UpdatedAt = p.UpdatedAt
-            })
+            .Select(ToDtoExpression)
             .FirstOrDefaultAsync();
 
         if (product == null)
@@ -199,9 +169,10 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new product
+    /// Create a new product (admin only)
     /// </summary>
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<ProductDto>> CreateProduct([FromBody] CreateProductDto dto)
     {
         if (!ModelState.IsValid)
@@ -229,27 +200,19 @@ public class ProductsController : ControllerBase
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
-        var result = new ProductDto
-        {
-            ProductId = product.ProductId,
-            ProductName = product.ProductName,
-            Description = product.Description,
-            Price = product.Price,
-            ImageUrl = product.ImageUrl,
-            StockQuantity = product.StockQuantity,
-            CategoryId = product.CategoryId,
-            CategoryName = category.CategoryName,
-            CreatedAt = product.CreatedAt,
-            UpdatedAt = product.UpdatedAt
-        };
+        _logger.LogInformation("Admin created product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
+
+        var result = ToDto(product);
+        result.CategoryName = category.CategoryName;
 
         return CreatedAtAction(nameof(GetProduct), new { id = product.ProductId }, result);
     }
 
     /// <summary>
-    /// Update an existing product
+    /// Update an existing product (admin only)
     /// </summary>
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<ActionResult<ProductDto>> UpdateProduct(int id, [FromBody] UpdateProductDto dto)
     {
         if (!ModelState.IsValid)
@@ -279,27 +242,19 @@ public class ProductsController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        var result = new ProductDto
-        {
-            ProductId = product.ProductId,
-            ProductName = product.ProductName,
-            Description = product.Description,
-            Price = product.Price,
-            ImageUrl = product.ImageUrl,
-            StockQuantity = product.StockQuantity,
-            CategoryId = product.CategoryId,
-            CategoryName = category.CategoryName,
-            CreatedAt = product.CreatedAt,
-            UpdatedAt = product.UpdatedAt
-        };
+        _logger.LogInformation("Admin updated product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
+
+        var result = ToDto(product);
+        result.CategoryName = category.CategoryName;
 
         return Ok(result);
     }
 
     /// <summary>
-    /// Update stock quantity for a product
+    /// Update stock quantity for a product (admin only)
     /// </summary>
     [HttpPatch("{id:int}/stock")]
+    [Authorize]
     public async Task<ActionResult> UpdateStock(int id, [FromBody] UpdateStockDto dto)
     {
         if (!ModelState.IsValid)
@@ -318,6 +273,8 @@ public class ProductsController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("Admin set stock of product {ProductId} to {Stock}", product.ProductId, product.StockQuantity);
+
         return Ok(new
         {
             message = "Stock updated successfully.",
@@ -328,9 +285,10 @@ public class ProductsController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a product
+    /// Delete a product (admin only)
     /// </summary>
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var product = await _context.Products.FindAsync(id);
@@ -342,7 +300,8 @@ public class ProductsController : ControllerBase
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("Admin deleted product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
+
         return Ok(new { message = $"Product '{product.ProductName}' deleted successfully." });
     }
 }
-

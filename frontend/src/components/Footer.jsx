@@ -1,6 +1,5 @@
-import React from 'react';
-import { Shield, Phone, Send, ExternalLink, Heart } from 'lucide-react';
-import { STORE_PHONE, TELEGRAM_USERNAME, openGeneralTelegram } from '../utils/telegram';
+import { Shield, Phone, Send, ExternalLink } from 'lucide-react';
+import { STORE_PHONE, TELEGRAM_USERNAME } from '../utils/telegram';
 import logoImg from '../assets/picture/logo.png';
 
 export default function Footer() {

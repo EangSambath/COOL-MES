@@ -1,6 +1,7 @@
 using CoolMes.Api.Data;
 using CoolMes.Api.Dtos;
 using CoolMes.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,9 +66,10 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Create a new category
+    /// Create a new category (admin only)
     /// </summary>
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<CategoryDto>> CreateCategory([FromBody] CreateCategoryDto dto)
     {
         if (!ModelState.IsValid)
@@ -92,6 +94,8 @@ public class CategoriesController : ControllerBase
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("Admin created category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
+
         var result = new CategoryDto
         {
             CategoryId = category.CategoryId,
@@ -104,9 +108,10 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Update an existing category
+    /// Update an existing category (admin only)
     /// </summary>
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<ActionResult<CategoryDto>> UpdateCategory(int id, [FromBody] UpdateCategoryDto dto)
     {
         if (!ModelState.IsValid)
@@ -133,6 +138,8 @@ public class CategoriesController : ControllerBase
 
         await _context.SaveChangesAsync();
 
+        _logger.LogInformation("Admin updated category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
+
         var productCount = await _context.Products.CountAsync(p => p.CategoryId == id);
 
         var result = new CategoryDto
@@ -147,9 +154,10 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete a category
+    /// Delete a category (admin only)
     /// </summary>
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var category = await _context.Categories
@@ -171,6 +179,8 @@ public class CategoriesController : ControllerBase
 
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
+
+        _logger.LogInformation("Admin deleted category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
 
         return Ok(new { message = $"Category '{category.CategoryName}' deleted successfully." });
     }

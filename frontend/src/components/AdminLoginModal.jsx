@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
-import { Lock, KeyRound, X, AlertCircle, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Lock, KeyRound, X, AlertCircle } from 'lucide-react';
+import { api } from '../api/api';
 
 export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Default admin credentials: admin123 or coolmes2026
-    if (password === 'admin123' || password === 'coolmes2026') {
-      localStorage.setItem('coolmes_admin_auth', 'true');
-      setError('');
+    if (!password.trim() || submitting) return;
+
+    setSubmitting(true);
+    setError('');
+    try {
+      await api.login(password);
       setPassword('');
       onLoginSuccess();
-    } else {
-      setError('Incorrect password. Please try again.');
+    } catch (err) {
+      setError(err.message || 'Incorrect password. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
-      <div 
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-login-title"
         className="relative w-full max-w-md glass-sheet animate-sheetIn rounded-3xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
+          aria-label="Close login modal"
           className="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#F5F5F7] hover:bg-black/[0.08] text-[#1D1D1F] flex items-center justify-center transition"
         >
           <X className="w-4 h-4" />
@@ -40,7 +50,7 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
           <div className="w-12 h-12 rounded-2xl bg-[#F5F5F7] border border-black/[0.06] text-[#1D1D1F] flex items-center justify-center mx-auto mb-3">
             <Lock className="w-5 h-5" />
           </div>
-          <h2 className="text-xl font-semibold tracking-tight text-[#1D1D1F]">
+          <h2 id="admin-login-title" className="text-xl font-semibold tracking-tight text-[#1D1D1F]">
             Administrator Access
           </h2>
           <p className="text-xs text-[#6E6E73] mt-1">
@@ -78,9 +88,10 @@ export default function AdminLoginModal({ isOpen, onClose, onLoginSuccess }) {
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white font-medium text-sm transition shadow-apple"
+            disabled={submitting}
+            className="w-full py-2.5 rounded-full bg-[#1D1D1F] hover:bg-[#000000] disabled:opacity-50 text-white font-medium text-sm transition shadow-apple"
           >
-            Continue to Dashboard
+            {submitting ? 'Signing in...' : 'Continue to Dashboard'}
           </button>
         </form>
       </div>

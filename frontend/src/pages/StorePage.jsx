@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '../components/Header';
 import HeroCarousel from '../components/HeroCarousel';
 import ProductGrid from '../components/ProductGrid';
 import ProductModal from '../components/ProductModal';
 import Footer from '../components/Footer';
 import { api } from '../api/api';
+import { openGeneralTelegram } from '../utils/telegram';
 
 export default function StorePage() {
   const [categories, setCategories] = useState([]);
@@ -15,25 +16,34 @@ export default function StorePage() {
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [activeProduct, setActiveProduct] = useState(null);
-  const [isLiveApi, setIsLiveApi] = useState(false);
   const [loadError, setLoadError] = useState(null);
+  const requestSeqRef = useRef(0);
 
   const fetchCategories = useCallback(async () => {
     try {
       const cats = await api.getCategories();
       setCategories(cats || []);
-      setIsLiveApi(true);
     } catch (err) {
       setLoadError(err.message);
-      setIsLiveApi(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    let active = true;
+    api.getCategories()
+      .then((cats) => {
+        if (active) setCategories(cats || []);
+      })
+      .catch((err) => {
+        if (active) setLoadError(err.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const fetchProducts = useCallback(async () => {
+    const seq = ++requestSeqRef.current;
     setLoading(true);
     try {
       const page = await api.getProducts({
@@ -41,17 +51,19 @@ export default function StorePage() {
         categoryId: selectedCategory || undefined,
         inStockOnly: inStockOnly || undefined,
         sortBy: sortBy || undefined,
-        pageSize: 100, // API default is 12; load the whole catalog
+        pageSize: 100,
       });
+      if (seq !== requestSeqRef.current) return;
       setProducts(page?.items || []);
-      setIsLiveApi(true);
       setLoadError(null);
     } catch (err) {
+      if (seq !== requestSeqRef.current) return;
       setProducts([]);
       setLoadError(err.message);
-      setIsLiveApi(false);
     } finally {
-      setLoading(false);
+      if (seq === requestSeqRef.current) {
+        setLoading(false);
+      }
     }
   }, [selectedCategory, searchTerm, inStockOnly, sortBy]);
 
@@ -77,7 +89,19 @@ export default function StorePage() {
   const activeCategoryObj = categories.find((c) => c.categoryId === selectedCategory);
   const activeCategoryName = activeCategoryObj ? activeCategoryObj.categoryName : null;
 
-  const scrollToProducts = () => {
+  const handleHeroAction = (slide) => {
+    if (slide?.action === 'telegram') {
+      openGeneralTelegram();
+      return;
+    }
+    if (slide?.categoryName && categories.length > 0) {
+      const matched = categories.find(
+        (c) => c.categoryName.toLowerCase() === slide.categoryName.toLowerCase()
+      );
+      if (matched) {
+        setSelectedCategory(matched.categoryId);
+      }
+    }
     document.getElementById('products-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -89,10 +113,9 @@ export default function StorePage() {
         categories={categories}
         selectedCategory={selectedCategory}
         onSelectCategory={setSelectedCategory}
-        isLiveApi={isLiveApi}
       />
 
-      <HeroCarousel onExploreClick={scrollToProducts} />
+      <HeroCarousel onExploreClick={handleHeroAction} />
 
       <main className="flex-1">
         {loadError && (

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminDashboard from '../components/AdminDashboard';
 import AdminLoginModal from '../components/AdminLoginModal';
+import { api } from '../api/api';
 
 /**
  * Hidden admin route (/admin). Not linked anywhere in the public UI.
@@ -9,9 +10,13 @@ import AdminLoginModal from '../components/AdminLoginModal';
  */
 export default function AdminPage() {
   const navigate = useNavigate();
-  const [authed, setAuthed] = useState(
-    () => localStorage.getItem('coolmes_admin_auth') === 'true'
-  );
+  const [authed, setAuthed] = useState(() => api.hasAdminToken());
+
+  useEffect(() => {
+    const handleUnauthorized = () => setAuthed(false);
+    window.addEventListener('coolmes:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('coolmes:unauthorized', handleUnauthorized);
+  }, []);
 
   if (!authed) {
     return (

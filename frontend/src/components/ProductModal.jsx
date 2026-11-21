@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
-import { X, Send, Plus, Minus, ShieldCheck, ShieldAlert, CheckCircle2, MessageSquare, Phone } from 'lucide-react';
-import { openTelegramOrder, STORE_PHONE, TELEGRAM_USERNAME } from '../utils/telegram';
+import { useState, useEffect } from 'react';
+import { X, Send, Plus, Minus, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { openTelegramOrder, TELEGRAM_USERNAME } from '../utils/telegram';
 
 export default function ProductModal({ product, onClose }) {
   const [quantity, setQuantity] = useState(1);
   const [customNote, setCustomNote] = useState('');
+
+  // Close on Escape key & lock background page scroll while modal is open
+  useEffect(() => {
+    if (!product) return undefined;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [product, onClose]);
 
   if (!product) return null;
 
@@ -26,17 +43,21 @@ export default function ProductModal({ product, onClose }) {
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/30 backdrop-blur-md animate-fadeIn"
       onClick={onClose}
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="product-modal-title"
         className="relative w-full max-w-2xl glass-sheet animate-sheetIn rounded-3xl overflow-hidden flex flex-col md:flex-row max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
+          aria-label="Close product details"
           className="absolute top-3.5 right-3.5 z-20 w-8 h-8 rounded-full bg-[#F5F5F7] hover:bg-black/[0.08] text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
         >
           <X className="w-4 h-4" />
@@ -81,7 +102,7 @@ export default function ProductModal({ product, onClose }) {
             </div>
 
             {/* Title */}
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[#1D1D1F] leading-[1.12]">
+            <h2 id="product-modal-title" className="text-2xl sm:text-3xl font-semibold tracking-[-0.025em] text-[#1D1D1F] leading-[1.12]">
               {product.productName}
             </h2>
 
@@ -111,6 +132,7 @@ export default function ProductModal({ product, onClose }) {
                   <button
                     onClick={decrement}
                     disabled={quantity <= 1}
+                    aria-label="Decrease quantity"
                     className="w-7 h-7 rounded-full bg-white hover:bg-black/[0.06] disabled:opacity-30 text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
                   >
                     <Minus className="w-3.5 h-3.5" />
@@ -121,6 +143,7 @@ export default function ProductModal({ product, onClose }) {
                   <button
                     onClick={increment}
                     disabled={quantity >= maxAvailable}
+                    aria-label="Increase quantity"
                     className="w-7 h-7 rounded-full bg-white hover:bg-black/[0.06] disabled:opacity-30 text-[#1D1D1F] flex items-center justify-center border border-black/[0.06] transition"
                   >
                     <Plus className="w-3.5 h-3.5" />

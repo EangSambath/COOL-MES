@@ -12,25 +12,26 @@ export function buildTelegramUrl(message = '') {
 }
 
 /**
- * Generates structured product ordering message for Telegram
+ * Generates structured product ordering message for Telegram.
+ * Plain text (no Markdown asterisks) because t.me/?text= does not parse Markdown.
  */
 export function buildOrderMessage(product, quantity = 1, customNote = '') {
   const total = (Number(product.price || 0) * quantity).toFixed(2);
-  
-  let msg = `🛒 *NEW ORDER INQUIRY - ${STORE_NAME}*\n`;
+
+  let msg = `🛒 NEW ORDER INQUIRY - ${STORE_NAME}\n`;
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
-  msg += `📦 *Product:* ${product.productName}\n`;
-  msg += `🏷️ *Price:* $${Number(product.price).toFixed(2)}\n`;
-  msg += `🔢 *Quantity:* ${quantity} unit(s)\n`;
-  msg += `💰 *Subtotal:* $${total}\n`;
+  msg += `📦 Product: ${product.productName}\n`;
+  msg += `🏷️ Price: $${Number(product.price).toFixed(2)}\n`;
+  msg += `🔢 Quantity: ${quantity} unit(s)\n`;
+  msg += `💰 Subtotal: $${total}\n`;
   if (product.productId) {
-    msg += `🆔 *Product ID:* #${product.productId}\n`;
+    msg += `🆔 Product ID: #${product.productId}\n`;
   }
   if (product.categoryName) {
-    msg += `📁 *Category:* ${product.categoryName}\n`;
+    msg += `📁 Category: ${product.categoryName}\n`;
   }
   if (customNote) {
-    msg += `📝 *Note:* ${customNote}\n`;
+    msg += `📝 Note: ${customNote}\n`;
   }
   msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
   msg += `👋 Hello Sambath! I'm interested in ordering this product from COOL MES. Please confirm availability and payment/delivery details.`;
@@ -58,4 +59,3 @@ export function openGeneralTelegram() {
   const url = buildTelegramUrl(buildGeneralContactMessage());
   window.open(url, '_blank', 'noopener,noreferrer');
 }
-

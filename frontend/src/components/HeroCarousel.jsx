@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Send, ShieldCheck, ArrowRight, Pause, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShieldCheck, ArrowRight, Pause, Play } from 'lucide-react';
 import { HERO_SLIDES } from '../data/mockData';
-import { openGeneralTelegram } from '../utils/telegram';
 
 export default function HeroCarousel({ onExploreClick }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const timerRef = useRef(null);
+  const touchStartXRef = useRef(null);
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1));
@@ -20,12 +20,31 @@ export default function HeroCarousel({ onExploreClick }) {
     setCurrentIndex(index);
   };
 
-  // Auto-play timer
+  // Touch swipe support for mobile devices
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null) return;
+    const endX = e.changedTouches[0]?.clientX ?? touchStartXRef.current;
+    const diffX = touchStartXRef.current - endX;
+    if (Math.abs(diffX) > 45) {
+      if (diffX > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
+  // Auto-play timer (6.5s gives mobile readers enough time)
   useEffect(() => {
     if (isPlaying) {
       timerRef.current = setInterval(() => {
         nextSlide();
-      }, 5000);
+      }, 6500);
     }
     return () => clearInterval(timerRef.current);
   }, [currentIndex, isPlaying]);
@@ -35,6 +54,8 @@ export default function HeroCarousel({ onExploreClick }) {
       className="relative w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)] max-w-7xl mx-auto mt-6 sm:mt-8 rounded-3xl overflow-hidden bg-[#F5F5F7] select-none group border border-black/[0.06] shadow-apple"
       onMouseEnter={() => setIsPlaying(false)}
       onMouseLeave={() => setIsPlaying(true)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Slides Container */}
       <div
@@ -74,20 +95,12 @@ export default function HeroCarousel({ onExploreClick }) {
                 {/* Actions */}
                 <div className="pt-2 flex items-center gap-3 flex-wrap">
                   <button
-                    onClick={onExploreClick}
+                    onClick={() => onExploreClick?.(slide)}
                     className="flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-[#1D1D1F] hover:bg-[#000000] text-white font-medium text-sm transition shadow-apple"
                   >
                     <span>{slide.ctaText}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
-
-                  {/* <button
-                    onClick={openGeneralTelegram}
-                    className="flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-white hover:bg-black/[0.04] border border-black/[0.12] text-[#1D1D1F] font-medium text-sm transition group/btn"
-                  >
-                    <Send className="w-4 h-4 text-[#1D1D1F] group-hover/btn:translate-x-0.5 transition" />
-                    <span>@{`eangsambath`}</span>
-                  </button> */}
                 </div>
               </div>
             </div>
@@ -103,8 +116,8 @@ export default function HeroCarousel({ onExploreClick }) {
               />
               <div className="hidden md:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#F5F5F7] to-transparent" />
               <div className="md:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#F5F5F7] to-transparent" />
-              </div>
             </div>
+          </div>
         ))}
       </div>
 

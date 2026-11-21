@@ -1,4 +1,3 @@
-import React from 'react';
 import ProductCard from './ProductCard';
 import { SlidersHorizontal, PackageX, RotateCcw, ShieldCheck } from 'lucide-react';
 
@@ -11,7 +10,6 @@ export default function ProductGrid({
   sortBy,
   onSortChange,
   activeCategoryName,
-  totalCount,
   onResetFilters,
   hasActiveFilters
 }) {

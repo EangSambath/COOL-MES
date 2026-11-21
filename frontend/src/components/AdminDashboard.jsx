@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   FolderPlus, PackagePlus, Edit2, Trash2, ArrowLeft, LogOut, 
-  Search, Shield, CheckCircle2, AlertCircle, Plus, Minus, 
-  ExternalLink, Layers, Package, AlertTriangle, X, Upload, Image as ImageIcon, Link2
+  Search, CheckCircle2, AlertCircle, Plus, Minus, 
+  Layers, Package, AlertTriangle, X, Upload, Image as ImageIcon, Link2
 } from 'lucide-react';
 import { api } from '../api/api';
 import logoImg from '../assets/picture/logo.png';
@@ -27,26 +27,29 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
   const [loadError, setLoadError] = useState(null);
 
   // Load data (always fresh from the database via the API)
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     setLoading(true);
     try {
-      const [cats, prodPage] = await Promise.all([
+      const [cats, allProducts] = await Promise.all([
         api.getCategories(),
-        api.getProducts({ pageSize: 100 })
+        api.getAllProducts()
       ]);
       setCategories(cats || []);
-      setProducts(prodPage?.items || []);
+      setProducts(Array.isArray(allProducts) ? allProducts : (allProducts?.items || []));
       setLoadError(null);
     } catch (err) {
       setLoadError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    const timer = setTimeout(() => {
+      loadDashboardData();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [loadDashboardData]);
 
   const showToast = (message, type = 'success') => {
     setNotification({ message, type });
@@ -199,7 +202,7 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
             </button>
             <button
               onClick={() => {
-                localStorage.removeItem('coolmes_admin_auth');
+                api.logout();
                 onExitAdmin();
               }}
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200/80 text-xs font-medium transition"
@@ -359,7 +362,13 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black/[0.06]">
-                    {filteredCategories.length === 0 ? (
+                    {loading ? (
+                      <tr>
+                        <td colSpan="5" className="text-center py-10 text-[#6E6E73]">
+                          Loading categories...
+                        </td>
+                      </tr>
+                    ) : filteredCategories.length === 0 ? (
                       <tr>
                         <td colSpan="5" className="text-center py-10 text-[#6E6E73]">
                           No categories found. Click "Add Category" to create one.
@@ -465,7 +474,13 @@ export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black/[0.06]">
-                    {filteredProducts.length === 0 ? (
+                    {loading ? (
+                      <tr>
+                        <td colSpan="6" className="text-center py-10 text-[#6E6E73]">
+                          Loading products...
+                        </td>
+                      </tr>
+                    ) : filteredProducts.length === 0 ? (
                       <tr>
                         <td colSpan="6" className="text-center py-10 text-[#6E6E73]">
                           No products found matching criteria. Click "Add Product" to create one.

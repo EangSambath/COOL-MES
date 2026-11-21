@@ -1,5 +1,4 @@
-import React from 'react';
-import { Send, Eye, ShieldAlert, CheckCircle2, PackageCheck } from 'lucide-react';
+import { Send, Eye, ShieldAlert } from 'lucide-react';
 import { openTelegramOrder } from '../utils/telegram';
 
 export default function ProductCard({ product, onViewDetails }) {

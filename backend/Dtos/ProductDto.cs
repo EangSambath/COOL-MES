@@ -23,6 +23,7 @@ public class CreateProductDto
     [StringLength(200, MinimumLength = 2, ErrorMessage = "Product name must be between 2 and 200 characters")]
     public string ProductName { get; set; } = string.Empty;
 
+    [MaxLength(4000, ErrorMessage = "Description cannot exceed 4000 characters")]
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Price is required")]
@@ -30,6 +31,7 @@ public class CreateProductDto
     public decimal Price { get; set; }
 
     [Required(ErrorMessage = "Image is required")]
+    [ProductImage]
     public string ImageUrl { get; set; } = string.Empty;
 
     [Range(0, 100000, ErrorMessage = "Stock quantity must be non-negative")]
@@ -45,6 +47,7 @@ public class UpdateProductDto
     [StringLength(200, MinimumLength = 2, ErrorMessage = "Product name must be between 2 and 200 characters")]
     public string ProductName { get; set; } = string.Empty;
 
+    [MaxLength(4000, ErrorMessage = "Description cannot exceed 4000 characters")]
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Price is required")]
@@ -52,6 +55,7 @@ public class UpdateProductDto
     public decimal Price { get; set; }
 
     [Required(ErrorMessage = "Image is required")]
+    [ProductImage]
     public string ImageUrl { get; set; } = string.Empty;
 
     [Range(0, 100000, ErrorMessage = "Stock quantity must be non-negative")]
