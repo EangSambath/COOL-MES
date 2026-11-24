@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DEFAULT_CATEGORIES } from '../data/mockData';
 
 /**
  * API client for the COOL MES backend (ASP.NET Core + PostgreSQL).
@@ -10,6 +11,7 @@ const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/
 const API_BASE_URL = rawBaseUrl.endsWith('/api') ? rawBaseUrl : `${rawBaseUrl}/api`;
 
 export const ADMIN_TOKEN_KEY = 'coolmes_admin_token';
+export const CATEGORIES_CACHE_KEY = 'coolmes_categories_cache';
 
 const client = axios.create({
   baseURL: API_BASE_URL,
@@ -92,20 +94,50 @@ export const api = {
   },
 
   // ---------- Categories ----------
-  getCategories() {
-    return request(client.get('/categories'));
+  getInitialCategories() {
+    try {
+      const cached = localStorage.getItem(CATEGORIES_CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // Ignore localStorage errors and fallback to default categories
+    }
+    return DEFAULT_CATEGORIES;
   },
 
-  createCategory(categoryData) {
-    return request(client.post('/categories', categoryData));
+  async getCategories() {
+    const data = await request(client.get('/categories'));
+    if (Array.isArray(data) && data.length > 0) {
+      localStorage.setItem(CATEGORIES_CACHE_KEY, JSON.stringify(data));
+    }
+    return data;
   },
 
-  updateCategory(id, categoryData) {
-    return request(client.put(`/categories/${id}`, categoryData));
+  async createCategory(categoryData) {
+    const created = await request(client.post('/categories', categoryData));
+    // Immediately update local cache so UI stays instant
+    const current = this.getInitialCategories();
+    localStorage.setItem(CATEGORIES_CACHE_KEY, JSON.stringify([...current, created]));
+    return created;
   },
 
-  deleteCategory(id) {
-    return request(client.delete(`/categories/${id}`));
+  async updateCategory(id, categoryData) {
+    const updated = await request(client.put(`/categories/${id}`, categoryData));
+    // Update local cache so UI updates instantly
+    const current = this.getInitialCategories().map((c) =>
+      c.categoryId === id ? updated : c
+    );
+    localStorage.setItem(CATEGORIES_CACHE_KEY, JSON.stringify(current));
+    return updated;
+  },
+
+  async deleteCategory(id) {
+    const res = await request(client.delete(`/categories/${id}`));
+    const current = this.getInitialCategories().filter((c) => c.categoryId !== id);
+    localStorage.setItem(CATEGORIES_CACHE_KEY, JSON.stringify(current));
+    return res;
   },
 
   // ---------- Products ----------

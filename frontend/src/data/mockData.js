@@ -60,3 +60,24 @@ export const HERO_SLIDES = [
     action: "telegram"
   }
 ];
+
+export const DEFAULT_CATEGORIES = [
+  {
+    categoryId: 1,
+    categoryName: "IEM",
+    description: "Best for high quality sound",
+    productCount: 0
+  },
+  {
+    categoryId: 2,
+    categoryName: "Keyboards",
+    description: "For Typing and Gaming",
+    productCount: 0
+  },
+  {
+    categoryId: 3,
+    categoryName: "Mouses",
+    description: "Make you move faster",
+    productCount: 0
+  }
+];

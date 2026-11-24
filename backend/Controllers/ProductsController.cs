@@ -5,6 +5,7 @@ using CoolMes.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CoolMes.Api.Controllers;
 
@@ -36,11 +37,13 @@ public class ProductsController : ControllerBase
 
     private readonly AppDbContext _context;
     private readonly ILogger<ProductsController> _logger;
+    private readonly IMemoryCache _cache;
 
-    public ProductsController(AppDbContext context, ILogger<ProductsController> logger)
+    public ProductsController(AppDbContext context, ILogger<ProductsController> logger, IMemoryCache cache)
     {
         _context = context;
         _logger = logger;
+        _cache = cache;
     }
 
     /// <summary>
@@ -199,6 +202,7 @@ public class ProductsController : ControllerBase
 
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
+        _cache.Remove(CategoriesController.CacheKey);
 
         _logger.LogInformation("Admin created product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
 
@@ -241,6 +245,7 @@ public class ProductsController : ControllerBase
         product.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+        _cache.Remove(CategoriesController.CacheKey);
 
         _logger.LogInformation("Admin updated product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
 
@@ -299,6 +304,7 @@ public class ProductsController : ControllerBase
 
         _context.Products.Remove(product);
         await _context.SaveChangesAsync();
+        _cache.Remove(CategoriesController.CacheKey);
 
         _logger.LogInformation("Admin deleted product {ProductId} '{ProductName}'", product.ProductId, product.ProductName);
 

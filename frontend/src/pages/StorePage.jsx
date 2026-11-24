@@ -8,7 +8,7 @@ import { api } from '../api/api';
 import { openGeneralTelegram } from '../utils/telegram';
 
 export default function StorePage() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(() => api.getInitialCategories());
   const [products, setProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,9 +22,11 @@ export default function StorePage() {
   const fetchCategories = useCallback(async () => {
     try {
       const cats = await api.getCategories();
-      setCategories(cats || []);
-    } catch (err) {
-      setLoadError(err.message);
+      if (Array.isArray(cats) && cats.length > 0) {
+        setCategories(cats);
+      }
+    } catch {
+      // Keep showing cached/default categories silently if backend is offline or waking up
     }
   }, []);
 
@@ -32,10 +34,12 @@ export default function StorePage() {
     let active = true;
     api.getCategories()
       .then((cats) => {
-        if (active) setCategories(cats || []);
+        if (active && Array.isArray(cats) && cats.length > 0) {
+          setCategories(cats);
+        }
       })
-      .catch((err) => {
-        if (active) setLoadError(err.message);
+      .catch(() => {
+        // Keep showing cached/default categories silently
       });
     return () => {
       active = false;

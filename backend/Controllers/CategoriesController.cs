@@ -4,6 +4,7 @@ using CoolMes.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CoolMes.Api.Controllers;
 
@@ -11,22 +12,32 @@ namespace CoolMes.Api.Controllers;
 [Route("api/[controller]")]
 public class CategoriesController : ControllerBase
 {
+    public const string CacheKey = "coolmes_categories_list";
+
     private readonly AppDbContext _context;
     private readonly ILogger<CategoriesController> _logger;
+    private readonly IMemoryCache _cache;
 
-    public CategoriesController(AppDbContext context, ILogger<CategoriesController> logger)
+    public CategoriesController(AppDbContext context, ILogger<CategoriesController> logger, IMemoryCache cache)
     {
         _context = context;
         _logger = logger;
+        _cache = cache;
     }
 
     /// <summary>
-    /// Get all categories with product counts
+    /// Get all categories with product counts (served from in-memory cache after first load)
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories()
     {
+        if (_cache.TryGetValue(CacheKey, out List<CategoryDto>? cachedCategories) && cachedCategories != null)
+        {
+            return Ok(cachedCategories);
+        }
+
         var categories = await _context.Categories
+            .AsNoTracking()
             .Select(c => new CategoryDto
             {
                 CategoryId = c.CategoryId,
@@ -36,6 +47,8 @@ public class CategoriesController : ControllerBase
             })
             .OrderBy(c => c.CategoryName)
             .ToListAsync();
+
+        _cache.Set(CacheKey, categories, TimeSpan.FromHours(6));
 
         return Ok(categories);
     }
@@ -93,6 +106,7 @@ public class CategoriesController : ControllerBase
 
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
+        _cache.Remove(CacheKey);
 
         _logger.LogInformation("Admin created category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
 
@@ -137,6 +151,7 @@ public class CategoriesController : ControllerBase
         category.Description = dto.Description?.Trim();
 
         await _context.SaveChangesAsync();
+        _cache.Remove(CacheKey);
 
         _logger.LogInformation("Admin updated category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
 
@@ -179,6 +194,7 @@ public class CategoriesController : ControllerBase
 
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
+        _cache.Remove(CacheKey);
 
         _logger.LogInformation("Admin deleted category {CategoryId} '{CategoryName}'", category.CategoryId, category.CategoryName);
 

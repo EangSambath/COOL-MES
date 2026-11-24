@@ -9,7 +9,7 @@ import logoImg from '../assets/picture/logo.png';
 
 export default function AdminDashboard({ onExitAdmin, onRefreshStoreData }) {
   const [activeTab, setActiveTab] = useState('categories'); // 'categories' | 'products'
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(() => api.getInitialCategories());
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(null);

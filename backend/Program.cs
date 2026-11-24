@@ -22,6 +22,7 @@ var enableSwagger = builder.Environment.IsDevelopment() || builder.Configuration
 
 // 1. Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
