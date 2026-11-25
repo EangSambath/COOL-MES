@@ -1,63 +1,63 @@
 export const HERO_SLIDES = [
   {
     id: 1,
-    title: "TACTICAL & EDC ESSENTIALS",
-    subtitle: "Engineered for durability, precision, and peak performance in every situation.",
+    title: "AUDIOPHILE IEMS",
+    subtitle: "Engineered for acoustic precision, clarity, and studio-grade sound in every note.",
     tag: "NEW ARRIVALS 2026",
-    badge: "Grade 5 Titanium & Aerospace Aluminum",
+    badge: "CNC Machined & Precision Drivers",
     imageUrl: "/picture/first_hero.webp",
-    ctaText: "Explore EDC Gear",
-    categoryName: "Tactical & EDC"
+    ctaText: "Explore Audio Gear",
+    categoryName: "In-Ear Monitors"
   },
   {
     id: 2,
-    title: "HEAVY-DUTY TACTICAL BAGS",
-    subtitle: "Cordura 1000D water-resistant modular packs built for rigorous adventures.",
+    title: "CUSTOM MECHANICAL KEYBOARDS",
+    subtitle: "Gasket-mounted, hot-swappable boards with vibrant RGB and tactile switches.",
     tag: "BEST SELLER",
-    badge: "MOLLE System Compatible",
+    badge: "Tri-Mode Wireless & OLED Display",
     imageUrl: "/picture/second_hero.webp",
-    ctaText: "Shop Backpacks",
-    categoryName: "Bags & Backpacks"
+    ctaText: "Shop Keyboards",
+    categoryName: "Mechanical Keyboards"
   },
   {
     id: 3,
-    title: "MILITARY-GRADE TIMEPIECES",
-    subtitle: "50-meter water resistance, shockproof composite frames, ballistic NATO bands.",
+    title: "ULTRALIGHT GAMING MICE",
+    subtitle: "Esports-grade optical sensors, zero-latency wireless, and ergonomic grip shells.",
     tag: "FEATURED GEAR",
-    badge: "Built for Extreme Elements",
+    badge: "Pro-Grade Precision Sensor",
     imageUrl: "/picture/third_hero.webp",
-    ctaText: "View Watches",
-    categoryName: "Watches & Bands"
+    ctaText: "View Gaming Mice",
+    categoryName: "Gaming Mice"
   },
   {
     id: 4,
-    title: "RUGGED TECH ACCESSORIES",
-    subtitle: "Armored MagSafe cases, solar power banks, and heavy-duty magnetic mounts.",
-    tag: "TOUGH PROTECTION",
-    badge: "Drop-Tested Military Spec",
+    title: "TRUE WIRELESS EARBUDS",
+    subtitle: "Transparent acoustic housings, active noise cancellation, and deep bass response.",
+    tag: "NEXT-GEN AUDIO",
+    badge: "Hi-Res Wireless & Long Battery",
     imageUrl: "/picture/fourth_hero.webp",
-    ctaText: "Explore Tech Gear",
-    categoryName: "Tech Accessories"
+    ctaText: "Explore Earbuds",
+    categoryName: "Wireless Earbuds"
   },
   {
     id: 5,
-    title: "OUTDOOR SURVIVAL HARDWARE",
-    subtitle: "Ferro rods, titanium flasks, and emergency gear ready whenever you head into the wild.",
-    tag: "WILDERNESS READY",
-    badge: "Ultra-Light & Weatherproof",
+    title: "HIGH-CAPACITY POWER BANKS",
+    subtitle: "Multi-device fast charging with built-in cables and smart digital displays.",
+    tag: "PORTABLE POWER",
+    badge: "Ultra-Compact & Airline Safe",
     imageUrl: "/picture/fifth_hero.webp",
-    ctaText: "Shop Survival Gear",
-    categoryName: "Outdoor & Survival"
+    ctaText: "Shop Power Banks",
+    categoryName: "Power Banks"
   },
   {
     id: 6,
-    title: "ORDER DIRECTLY ON TELEGRAM",
-    subtitle: "Chat 1-on-1 with @eangsambath for instant answers, fast delivery, and personal service.",
-    tag: "FAST & DIRECT",
-    badge: "No Complex Signups Needed",
+    title: "FAST GAN CHARGERS & CABLES",
+    subtitle: "30W compact wall chargers paired with braided, tangle-free fast-charging cables.",
+    tag: "FAST & RELIABLE",
+    badge: "PowerIQ 3.0 & Braided Nylon",
     imageUrl: "/picture/sixth_hero.webp",
-    ctaText: "Chat with Us",
-    action: "telegram"
+    ctaText: "Shop Charging Gear",
+    categoryName: "Chargers & Cables"
   }
 ];
 
